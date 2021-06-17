@@ -23,10 +23,9 @@ import MediaPreview from './MediaPreview';
 import { default as Meter } from './VolumeMeter';
 
 import getConfigFromMetaTag from '../utils/metaConfig';
-import { createSoundPlayer, initSounds } from '../utils/sounds';
+// import { createSoundPlayer, initSounds } from '../utils/sounds';
 
-const hasTestOutput = getConfigFromMetaTag('sound-test-output');
-const throttledTestOutput = createSoundPlayer('sound-test-output');
+const hasTestOutput = false // getConfigFromMetaTag('sound-test-output');
 
 const Container = styled.div({
   display: 'grid',
@@ -252,12 +251,12 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                                     onClick={async e => {
                                       e.preventDefault();
                                       this.setState({ testingOutput: true });
-                                      await throttledTestOutput(user.audioOutputDeviceId);
+                                      // await throttledTestOutput(user.audioOutputDeviceId);
                                       this.setState({ testingOutput: false });
                                       return false;
                                     }}
                                   >
-                                    {this.state.testingOutput ? 'Playing...' : 'Test Speaker'}
+                                    {this.state.testingOutput ? 'Not implemented...' : 'Test Speaker'}
                                   </TestOutputButton>
                                 )}
                                 <select
@@ -386,7 +385,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
 
                               // Use this user-gesture to trigger empty audio elements to play, so we can
                               // later play sound effects.
-                              initSounds();
+                              // initSounds();
 
                               this.props.onAccept();
                             }}

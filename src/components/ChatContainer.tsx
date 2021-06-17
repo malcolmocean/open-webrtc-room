@@ -15,7 +15,6 @@ import styled, { css } from 'styled-components';
 import { TalkyButton } from '../styles/button';
 import mq from '../styles/media-queries';
 import { colorToString } from '../utils/colorify';
-import emojify from '../utils/emojify';
 import Linkify from './Linkify';
 
 const Container = styled.div`
@@ -150,7 +149,7 @@ const ChatMessageGroup: React.SFC<ChatMessageGroupProps> = ({ chats, peer }) => 
     <MessageTime>{chats[0].time.toLocaleTimeString()}</MessageTime>
     {chats.map(message => (
       <MessageText key={message.id}>
-        <Linkify text={emojify(message.body)} />
+        <Linkify text={message.body} />
       </MessageText>
     ))}
   </Message>

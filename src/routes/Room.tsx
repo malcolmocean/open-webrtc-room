@@ -17,7 +17,6 @@ import Haircheck from '../components/Haircheck';
 import PasswordEntry from '../components/PasswordEntry';
 import PeerGrid from '../components/PeerGrid';
 import Sidebar from '../components/Sidebar';
-import SoundPlayer from '../components/SoundPlayer';
 import HiddenPeers from '../contexts/HiddenPeers';
 import mq from '../styles/media-queries';
 
@@ -143,7 +142,6 @@ class Index extends Component<Props, State> {
                 {({ room }) => {
                   return (
                     <Container>
-                      <SoundPlayer roomAddress={room.address!} />
                       <Sidebar
                         roomAddress={room.address!}
                         activeSpeakerView={this.state.activeSpeakerView}
