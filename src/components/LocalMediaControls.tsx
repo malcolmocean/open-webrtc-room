@@ -101,19 +101,20 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
         }
       }}
       share={true}
-      render={(getMedia, captureState) => (
+      render={(getMedia, captureState, removeAllMedia) => (
         <MuteButton
           isOff={isMuted}
-          isFlashing={isSpeakingWhileMuted || captureState.requestingMicrophoneCapture}
+          isFlashing={isSpeakingWhileMuted}
           onClick={() => {
             if (captureState.requestingCapture) {
               return;
             } else if (!hasAudio) {
-              getMedia();
+              getMedia({ audio: true });
             } else if (isMuted) {
               unmute();
             } else {
               mute();
+              removeAllMedia('audio');
             }
           }}
         >

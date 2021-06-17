@@ -159,7 +159,6 @@ const SidebarUserControls: React.SFC<Props> = ({
             }}
           />
         </LocalVideo>
-        <RequestUserMedia audio />
         <LocalMediaControls
           hasAudio={hasAudio}
           isMuted={isMuted}

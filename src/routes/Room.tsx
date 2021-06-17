@@ -6,7 +6,6 @@ import {
   Failed,
   Provider,
   RemoteAudioPlayer,
-  RequestUserMedia,
   Room
 } from '@andyet/simplewebrtc';
 import React, { Component } from 'react';
