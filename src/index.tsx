@@ -46,7 +46,6 @@ if (!localStorage.disablePageRefresh) {
 
 interface RunConfig {
   roomName: string;
-  initialPassword?: string;
   root: HTMLElement;
   gridPlaceholder?: PlaceholderGenerator;
   haircheckHeaderPlaceholder?: PlaceholderGenerator;
@@ -63,7 +62,6 @@ interface RunConfig {
 
 const run = ({
   roomName,
-  initialPassword,
   root,
   gridPlaceholder,
   haircheckHeaderPlaceholder,
@@ -114,7 +112,6 @@ const run = ({
         roomName={roomName}
         configUrl={CONFIG_URL}
         userData={USER_DATA}
-        initialPassword={initialPassword}
         roomConfig={{
           openToPublic,
           showHostVideo,

@@ -73,7 +73,6 @@ interface Props {
   configUrl: string;
   userData?: string;
   roomName?: string;
-  initialPassword?: string;
   roomConfig: RoomConfig;
 }
 
@@ -83,7 +82,6 @@ class App extends Component<Props> {
       roomName,
       configUrl,
       userData,
-      initialPassword,
       roomConfig,
     } = this.props;
     return (
@@ -96,7 +94,6 @@ class App extends Component<Props> {
                 name={roomName}
                 configUrl={configUrl}
                 userData={userData}
-                initialPassword={initialPassword}
                 roomConfig={roomConfig}
               />
             ) : (

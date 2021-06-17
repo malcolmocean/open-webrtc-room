@@ -12,19 +12,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Haircheck from '../components/Haircheck';
-import PasswordEntry from '../components/PasswordEntry';
 import PeerGrid from '../components/PeerGrid';
 import Sidebar from '../components/Sidebar';
 import HiddenPeers from '../contexts/HiddenPeers';
 import mq from '../styles/media-queries';
-
-const PasswordEntryContainer = styled.div({
-  alignItems: 'center',
-  display: 'flex',
-  flex: '1 1 0%',
-  justifyContent: 'center',
-  position: 'relative'
-});
 
 const RootContainer = styled.div({
   display: 'flex',
@@ -64,7 +55,6 @@ interface Props {
   configUrl: string;
   userData?: string;
   name: string;
-  initialPassword?: string;
   mute?: () => void;
   unmute?: () => void;
   roomConfig: RoomConfig;
@@ -75,7 +65,6 @@ interface State {
   consentToJoin: boolean;
   pttMode: boolean;
   sendRtt: boolean;
-  password?: string;
   chatOpen: boolean;
   hiddenPeers: string[];
   openToPublic: boolean;
@@ -102,7 +91,6 @@ class Index extends Component<Props, State> {
     this.state = {
       activeSpeakerView: false,
       consentToJoin: false,
-      password: props.initialPassword,
       pttMode: false,
       sendRtt: false,
       chatOpen: true,
@@ -136,7 +124,7 @@ class Index extends Component<Props, State> {
               />
             )}
             {this.state.consentToJoin && (
-              <Room password={this.state.password} name={this.props.name}>
+              <Room name={this.props.name}>
                 {({ room }) => {
                   return (
                     <Container>
@@ -146,10 +134,7 @@ class Index extends Component<Props, State> {
                         toggleActiveSpeakerView={this.toggleActiveSpeakerView}
                         pttMode={this.state.pttMode}
                         togglePttMode={this.togglePttMode}
-                        setPassword={this.setPassword}
-                        passwordRequired={room.passwordRequired}
                         roomId={room.id!}
-                        currentPassword={room.password}
                         allowInvites={this.state.allowInvites}
                         allowShareScreen={this.state.allowShareScreen}
                         allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
@@ -174,16 +159,7 @@ class Index extends Component<Props, State> {
                           <PeerGrid
                             roomAddress={room.address!}
                             activeSpeakerView={this.state.activeSpeakerView}
-                            setPassword={this.setPassword}
                           />
-                        ) : room.passwordRequired ? (
-                          <PasswordEntryContainer>
-                            <PasswordEntry
-                              setting={false}
-                              passwordIsIncorrect={!!this.state.password}
-                              setPassword={this.setPassword}
-                            />
-                          </PasswordEntryContainer>
                         ) : room.roomFull ? (
                           <LoadingState>
                             <h1>This room is full.</h1>
@@ -247,17 +223,6 @@ class Index extends Component<Props, State> {
     if (e.key === ' ') {
       this.props.unmute!();
     }
-  };
-
-  private setPassword = (password: string) => {
-    if (password) {
-      // eslint-disable-next-line no-restricted-globals
-      history.pushState(null, '', `${window.location.pathname}?password=${password}`);
-    } else {
-      // eslint-disable-next-line no-restricted-globals
-      history.pushState(null, '', `${window.location.pathname}`);
-    }
-    this.setState({ password });
   };
 
   private toggleChat = () => {
