@@ -11,8 +11,6 @@ import {
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import ChatContainer from '../components/ChatContainer';
-import ChatToggle from '../components/ChatToggle';
 import Haircheck from '../components/Haircheck';
 import PasswordEntry from '../components/PasswordEntry';
 import PeerGrid from '../components/PeerGrid';
@@ -204,17 +202,6 @@ class Index extends Component<Props, State> {
                           </LoadingState>
                         )}
                       </Connected>
-                      {this.state.allowChat ? (
-                        this.state.chatOpen ? (
-                          <ChatContainer
-                            disabled={!room.joined}
-                            roomAddress={room.address!}
-                            toggleChat={this.toggleChat}
-                          />
-                        ) : (
-                          <ChatToggle roomAddress={room.address!} onClick={this.toggleChat} />
-                        )
-                      ) : null}
                     </Container>
                   );
                 }}
