@@ -90,7 +90,6 @@ class App extends Component<Props> {
               userData={userData}
               roomConfig={roomConfig}
             />
-            )
           </Container>
         </div>
       </ThemeProvider>

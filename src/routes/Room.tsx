@@ -117,73 +117,64 @@ class Index extends Component<Props, State> {
           }}
         >
           <RootContainer>
-            {!this.state.consentToJoin && (
-              <Haircheck
-                onAccept={() => {
-                  this.setState({ consentToJoin: true });
-                }}
-              />
-            )}
-            {this.state.consentToJoin && (
-              <Room name={this.props.name}>
-                {({ room }) => {
-                  return (
-                    <Container>
-                      <Sidebar
-                        roomAddress={room.address!}
-                        activeSpeakerView={this.state.activeSpeakerView}
-                        toggleActiveSpeakerView={this.toggleActiveSpeakerView}
-                        pttMode={this.state.pttMode}
-                        togglePttMode={this.togglePttMode}
-                        roomId={room.id!}
-                        allowInvites={this.state.allowInvites}
-                        allowShareScreen={this.state.allowShareScreen}
-                        allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
-                      />
-                      <Connecting>
+            <Room name={this.props.name}>
+              {({ room }) => {
+                return (
+                  <Container>
+                    <Sidebar
+                      roomAddress={room.address!}
+                      activeSpeakerView={this.state.activeSpeakerView}
+                      toggleActiveSpeakerView={this.toggleActiveSpeakerView}
+                      pttMode={this.state.pttMode}
+                      togglePttMode={this.togglePttMode}
+                      roomId={room.id!}
+                      allowInvites={this.state.allowInvites}
+                      allowShareScreen={this.state.allowShareScreen}
+                      allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
+                    />
+                    <Connecting>
+                      <LoadingState>
+                        <h1>Connecting...</h1>
+                      </LoadingState>
+                    </Connecting>
+                    <Disconnected>
+                      <LoadingState>
+                        <h1>Lost connection. Reattempting to join...</h1>
+                      </LoadingState>
+                    </Disconnected>
+                    <Failed>
+                      <LoadingState>
+                        <h1>Connection failed.</h1>
+                      </LoadingState>
+                    </Failed>
+                    <Connected>
+                      {room.joined ? (
+                        <PeerGrid
+                          roomAddress={room.address!}
+                          activeSpeakerView={this.state.activeSpeakerView}
+                        />
+                      ) : room.roomFull ? (
                         <LoadingState>
-                          <h1>Connecting...</h1>
+                          <h1>This room is full.</h1>
                         </LoadingState>
-                      </Connecting>
-                      <Disconnected>
+                      ) : room.roomNotStarted ? (
                         <LoadingState>
-                          <h1>Lost connection. Reattempting to join...</h1>
+                          <h1>This room has not started yet.</h1>
                         </LoadingState>
-                      </Disconnected>
-                      <Failed>
+                      ) : room.banned ? (
                         <LoadingState>
-                          <h1>Connection failed.</h1>
+                          <h1>This room is not available.</h1>
                         </LoadingState>
-                      </Failed>
-                      <Connected>
-                        {room.joined ? (
-                          <PeerGrid
-                            roomAddress={room.address!}
-                            activeSpeakerView={this.state.activeSpeakerView}
-                          />
-                        ) : room.roomFull ? (
-                          <LoadingState>
-                            <h1>This room is full.</h1>
-                          </LoadingState>
-                        ) : room.roomNotStarted ? (
-                          <LoadingState>
-                            <h1>This room has not started yet.</h1>
-                          </LoadingState>
-                        ) : room.banned ? (
-                          <LoadingState>
-                            <h1>This room is not available.</h1>
-                          </LoadingState>
-                        ) : (
-                          <LoadingState>
-                            <h1>Joining room...</h1>
-                          </LoadingState>
-                        )}
-                      </Connected>
-                    </Container>
-                  );
-                }}
-              </Room>
-            )}
+                      ) : (
+                        <LoadingState>
+                          <h1>Joining room...</h1>
+                        </LoadingState>
+                      )}
+                    </Connected>
+                  </Container>
+                );
+              }}
+            </Room>
           </RootContainer>
         </HiddenPeers.Provider>
       </Provider>

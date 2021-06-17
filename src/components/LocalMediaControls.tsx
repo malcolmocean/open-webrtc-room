@@ -91,7 +91,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
   isSpeakingWhileMuted,
   resumeVideo,
   pauseVideo,
-  allowShareScreen,
+  allowShareScreen
 }) => (
   <Container>
     <RequestUserMedia
