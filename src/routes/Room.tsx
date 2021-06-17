@@ -6,6 +6,7 @@ import {
   Failed,
   Provider,
   RemoteAudioPlayer,
+  RequestUserMedia,
   Room
 } from '@andyet/simplewebrtc';
 import React, { Component } from 'react';
@@ -97,11 +98,11 @@ class Index extends Component<Props, State> {
       allowInvites,
       allowShareScreen,
       allowWalkieTalkieMode,
-      allowChat,
+      allowChat
     } = props.roomConfig;
     this.state = {
       activeSpeakerView: false,
-      consentToJoin: false,
+      consentToJoin: true,
       password: props.initialPassword,
       pttMode: false,
       sendRtt: false,
@@ -113,7 +114,7 @@ class Index extends Component<Props, State> {
       allowInvites,
       allowShareScreen,
       allowWalkieTalkieMode,
-      allowChat,
+      allowChat
     };
   }
 
