@@ -230,7 +230,6 @@ interface PeerGridItemOverlayProps {
   audioIsMuted: boolean;
   fullScreenActive: boolean;
   toggleFullScreen: () => Promise<void>;
-  setPassword: (password: string) => void;
 }
 
 const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
@@ -238,7 +237,6 @@ const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
   fullScreenActive,
   peer,
   toggleFullScreen,
-  setPassword
 }) => {
   const { togglePeer } = useContext(HiddenPeers);
   return (
@@ -289,7 +287,7 @@ const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
               title="Kick participant from the call"
               onClick={() => {
                 kick();
-                setPassword(`${Math.floor(Math.random() * 10000)}`);
+                // setPassword(`${Math.floor(Math.random() * 10000)}`);
               }}
             >
               <ReportIcon fill="red" />
@@ -305,12 +303,11 @@ const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
 interface PeerGridItemProps {
   peer: Peer;
   media: Media[];
-  setPassword: (password: string) => void;
   onlyVisible: boolean;
 }
 
 // PeerGridItem renders various controls over a peer's media.
-const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, setPassword, onlyVisible }) => (
+const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }) => (
   <FullScreen style={{ width: '100%', height: '100%' }}>
     {({ fullScreenActive, toggleFullScreen }) => (
       <>
@@ -319,7 +316,6 @@ const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, setPassword, 
           fullScreenActive={fullScreenActive}
           audioIsMuted={!allAudioIsUnmuted(media)}
           toggleFullScreen={toggleFullScreen}
-          setPassword={setPassword}
         />
         <PeerGridItemMedia media={media} fullScreenActive={fullScreenActive || onlyVisible} />
       </>

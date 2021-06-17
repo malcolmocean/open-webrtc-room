@@ -22,7 +22,6 @@ const StyledGridLayout = styled(GridLayout)({
 interface Props {
   roomAddress: string;
   activeSpeakerView: boolean;
-  setPassword: (password: string) => void;
 }
 
 const H2 = styled.h2`
@@ -48,7 +47,7 @@ const H2 = styled.h2`
 
 // PeerGrid is the main video display for Talky. It matches remoteMedia to
 // peers and then renders a PeerGridItem for each peer in the room.
-const PeerGrid: React.SFC<Props> = ({ roomAddress, activeSpeakerView, setPassword }) => {
+const PeerGrid: React.SFC<Props> = ({ roomAddress, activeSpeakerView }) => {
   const { hiddenPeers } = useContext(HiddenPeers);
   return (
     <PeerList
@@ -66,7 +65,6 @@ const PeerGrid: React.SFC<Props> = ({ roomAddress, activeSpeakerView, setPasswor
                   <PeerGridItem
                     media={media}
                     peer={peer}
-                    setPassword={setPassword}
                     onlyVisible={visiblePeers.length === 1}
                   />
                 )}

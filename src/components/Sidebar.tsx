@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
 import mq from '../styles/media-queries';
 import { colorToString } from '../utils/colorify';
-import RoomControls from './RoomControls';
 import Roster from './Roster';
 import SidebarLinks from './SidebarLinks';
 import SidebarUserControls from './SidebarUserControls';
@@ -28,17 +27,14 @@ interface Props {
   toggleActiveSpeakerView: () => void;
   pttMode: boolean;
   togglePttMode: (e: React.SyntheticEvent) => void;
-  setPassword: (s: string) => void;
-  passwordRequired?: boolean;
   roomId: string;
-  currentPassword?: string;
   allowInvites: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
 }
 
 interface State {
-  showPasswordModal: boolean;
+  // showPasswordModal: boolean;
 }
 
 // Sidebar contains all the UI elements that are rendered in the Sidebar
@@ -47,7 +43,8 @@ interface State {
 export default class Sidebar extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { showPasswordModal: false };
+    this.state = {};
+    // this.state = { showPasswordModal: false };
   }
 
   public render() {
@@ -55,12 +52,9 @@ export default class Sidebar extends Component<Props, State> {
       roomAddress,
       activeSpeakerView,
       toggleActiveSpeakerView,
-      passwordRequired,
       pttMode,
       togglePttMode,
-      setPassword,
       roomId,
-      currentPassword,
       allowInvites,
       allowShareScreen,
       allowWalkieTalkieMode,
@@ -68,16 +62,6 @@ export default class Sidebar extends Component<Props, State> {
 
     return (
       <Container>
-        <RoomControls
-          shouldShowPasswordModal={this.state.showPasswordModal}
-          passwordRequired={passwordRequired}
-          showPasswordModal={this.showPasswordModal}
-          hidePasswordModal={this.hidePasswordModal}
-          setPassword={setPassword}
-          roomId={roomId}
-          currentPassword={currentPassword}
-          allowInvites={allowInvites}
-        />
         <SidebarUserControls
           activeSpeakerView={activeSpeakerView}
           toggleActiveSpeakerView={toggleActiveSpeakerView}
@@ -91,12 +75,4 @@ export default class Sidebar extends Component<Props, State> {
       </Container>
     );
   }
-
-  private showPasswordModal = () => {
-    this.setState({ showPasswordModal: true });
-  };
-
-  private hidePasswordModal = () => {
-    this.setState({ showPasswordModal: false });
-  };
 }

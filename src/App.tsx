@@ -73,13 +73,12 @@ interface Props {
   configUrl: string;
   userData?: string;
   roomName?: string;
-  initialPassword?: string;
   roomConfig: RoomConfig;
 }
 
 class App extends Component<Props> {
   public render() {
-    const { roomName, configUrl, userData, initialPassword, roomConfig } = this.props;
+    const { roomName, configUrl, userData, roomConfig } = this.props;
     return (
       <ThemeProvider>
         <div style={{ height: '100%' }}>
@@ -89,7 +88,6 @@ class App extends Component<Props> {
               name={roomName ? roomName : 'Default Room'}
               configUrl={configUrl}
               userData={userData}
-              initialPassword={initialPassword}
               roomConfig={roomConfig}
             />
             )
