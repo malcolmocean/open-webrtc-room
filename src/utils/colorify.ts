@@ -3,6 +3,7 @@ function clamp(num: number, min: number, max: number): number {
 }
 
 export interface Color {
+  str?: string;
   h: number;
   s: number;
   l: number;
@@ -68,7 +69,14 @@ export function colorFromHex(s: string): Color {
   return a ? colorFromRgba(r, g, b, a) : colorFromRgb(r, g, b);
 }
 
+export function colorInherit(): Color {
+  return {h: 1, s: 1, l: 1, a: 1, str: 'inherit'}
+}
+
 export function colorToString(c: Color): string {
+  if (c.str) {
+    return c.str
+  }
   const { h, s, l, a } = c;
   return `hsla(${h}turn, ${(s * 100) / 1}%, ${(l * 100) / 1}%, ${a})`;
 }

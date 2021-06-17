@@ -1,4 +1,4 @@
-import { Color, colorFromHex, darken, lighten } from '../utils/colorify';
+import { Color, colorFromHex, colorInherit, darken, lighten } from '../utils/colorify';
 import colors from './colors';
 
 export interface TalkyBaseTheme {
@@ -66,6 +66,20 @@ const darkBase: TalkyBaseTheme = {
   secondaryForeground: colorFromHex('#fff')
 };
 
+const noneBase: TalkyBaseTheme = {
+  background: colorInherit(),
+  foreground: colorInherit(),
+  border: colorInherit(),
+  primaryBackground: colorInherit(),
+  primaryForeground: colorInherit(),
+  secondaryBackground: colorInherit(),
+  secondaryForeground: colorInherit(),
+  attentionBackground: colorInherit(),
+  attentionForeground: colorInherit(),
+  actionBackground: colorInherit(),
+  actionForeground: colorInherit(),
+}
+
 function kebabToCamel(s: string): string {
   return s.replace(/-([a-z])/g, g => g[1].toUpperCase());
 }
@@ -125,7 +139,8 @@ function baseToFull(base: TalkyBaseTheme): TalkyTheme {
 
 const themes: { [index: string]: TalkyTheme } = {
   light: baseToFull(mergeOverrides(lightBase)),
-  dark: baseToFull(mergeOverrides(darkBase))
+  dark: baseToFull(mergeOverrides(darkBase)),
+  none: baseToFull(mergeOverrides(noneBase))
 };
 
 export default themes;
