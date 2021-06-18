@@ -124,6 +124,7 @@ const SidebarUserControls: React.SFC<Props> = ({
   <UserControls
     render={({
       hasAudio,
+      hasVideo,
       isMuted,
       mute,
       unmute,
@@ -161,6 +162,7 @@ const SidebarUserControls: React.SFC<Props> = ({
         </LocalVideo>
         <LocalMediaControls
           hasAudio={hasAudio}
+          hasVideo={hasVideo}
           isMuted={isMuted}
           unmute={() => {
             unmute();
