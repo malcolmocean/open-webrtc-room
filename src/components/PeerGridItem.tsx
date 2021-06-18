@@ -68,6 +68,12 @@ const DisplayName = styled.span({
   }
 });
 
+const UserBox = styled.div({
+  border: '2px solid blue',
+  display: 'inline-block',
+  width: '200px',
+})
+
 const PictureInPictureContainer = styled.div({
   position: 'relative',
   display: 'flex',
@@ -102,15 +108,54 @@ const LoadingVideo: React.SFC<{
   return (
     <Video
       media={props.media}
-      qualityProfile={props.media.screenCapture ? undefined : props.qualityProfile}
+      qualityProfile={props.media.screenCapture ? 'low' : props.qualityProfile}
     />
   );
 };
+// changed screenCapture quality profile from undefined to 'low'
+// doesn't seem to work locally but might remotely (based on reading docs)
 
 // PeerGridItemMedia renders a different visualization based on what media is
 // available from a peer. It will render video if the peer is sending video,
 // otherwise it renders an audio-only display.
 const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, fullScreenActive }) => {
+  const videoStreams = media.filter(m => m.kind === 'video' && !m.remoteDisabled);
+
+  if (videoStreams.length > 0) {
+    const webcamStreams = videoStreams.filter(s => !s.screenCapture);
+    const screenCaptureStreams = videoStreams.filter(s => s.screenCapture);
+
+    if (videoStreams.length === 1) {
+      return (
+        <LoadingVideo
+          media={videoStreams[0]}
+          qualityProfile={fullScreenActive ? 'high' : 'medium'}
+        />
+      );
+    }
+    if (screenCaptureStreams.length === 0) {
+      return (
+        <LoadingVideo
+          media={webcamStreams[0]}
+          qualityProfile={fullScreenActive ? 'high' : 'medium'}
+        />
+      );
+    }
+
+    return (
+      <UserBox className='user-box'>
+        {/* Camera */}
+        <Video media={webcamStreams[0]} qualityProfile='low' />
+        {/* Screenshare */}
+        <LoadingVideo media={screenCaptureStreams[0]} />
+      </UserBox>
+    );
+  }
+
+  return <AudioOnlyPeer />;
+};
+
+const PeerGridItemMediaOriginal: React.SFC<PeerGridItemMediaProps> = ({ media, fullScreenActive }) => {
   const videoStreams = media.filter(m => m.kind === 'video' && !m.remoteDisabled);
 
   if (videoStreams.length > 0) {
@@ -307,6 +352,8 @@ interface PeerGridItemProps {
 }
 
 // PeerGridItem renders various controls over a peer's media.
+// M: the fullscreen thing below is sort of a controller;
+//    this is also the UI that's used when it's not fullscreen
 const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }) => (
   <FullScreen style={{ width: '100%', height: '100%' }}>
     {({ fullScreenActive, toggleFullScreen }) => (

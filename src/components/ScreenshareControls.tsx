@@ -6,7 +6,7 @@ import { TalkyButton } from '../styles/button';
 import mq from '../styles/media-queries';
 import { deviceSupportsVolumeMonitoring } from '../utils/isMobile';
 
-const Button = styled(TalkyButton)({
+const HideOnTinyScreensButton = styled(TalkyButton)({
   display: 'none',
   [mq.SMALL_DESKTOP]: {
     display: 'block'
@@ -30,10 +30,10 @@ const ScreenshareControls: React.SFC = () => (
       }
 
       return (
-        <Button title="Screen Share" onClick={getDisplayMedia}>
+        <TalkyButton title="Screen Share" onClick={getDisplayMedia}>
           <ShareScreenIcon fill="#505658" />
           <span>Share screen</span>
-        </Button>
+        </TalkyButton>
       );
     }}
   />

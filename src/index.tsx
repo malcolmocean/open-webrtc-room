@@ -46,6 +46,7 @@ if (!localStorage.disablePageRefresh) {
 
 interface RunConfig {
   roomName: string;
+  userName?: string;
   root: HTMLElement;
   gridPlaceholder?: PlaceholderGenerator;
   haircheckHeaderPlaceholder?: PlaceholderGenerator;
@@ -54,14 +55,13 @@ interface RunConfig {
   openToPublic: boolean;
   showHostVideo: boolean;
   showVisitorVideo: boolean;
-  allowInvites: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
-  allowChat: boolean;
 }
 
 const run = ({
   roomName,
+  userName,
   root,
   gridPlaceholder,
   haircheckHeaderPlaceholder,
@@ -70,10 +70,8 @@ const run = ({
   openToPublic = true,
   showHostVideo = true,
   showVisitorVideo = true,
-  allowInvites = true,
   allowShareScreen = true,
   allowWalkieTalkieMode = true,
-  allowChat = true
 }: RunConfig) => {
   if (CONFIG_URL.endsWith('YOUR_API_KEY')) {
     ReactDOM.render(
@@ -90,14 +88,13 @@ const run = ({
         roomName={roomName}
         configUrl={CONFIG_URL}
         userData={USER_DATA}
+        userName={userName}
         roomConfig={{
           openToPublic,
           showHostVideo,
           showVisitorVideo,
-          allowInvites,
           allowShareScreen,
           allowWalkieTalkieMode,
-          allowChat
         }}
       />
     </Provider>,
@@ -114,8 +111,14 @@ const loadTemplate = (id: string): DocumentFragment | null => {
   return null;
 };
 
+// not actually implemented properly probably
+// function muteViaStore(mute: boolean) {
+//   store.dispatch(mute ? Actions.muteSelf : Actions.unmuteSelf());
+// }
+
 export default {
   run,
   loadTemplate,
-  randomRoomName
+  randomRoomName,
+  // muteViaStore,
 };

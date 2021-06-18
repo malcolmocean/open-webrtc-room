@@ -63,22 +63,21 @@ interface RoomConfig {
   openToPublic: boolean;
   showHostVideo: boolean;
   showVisitorVideo: boolean;
-  allowInvites: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
-  allowChat: boolean;
 }
 
 interface Props {
   configUrl: string;
   userData?: string;
+  userName?: string,
   roomName?: string;
   roomConfig: RoomConfig;
 }
 
 class App extends Component<Props> {
   public render() {
-    const { roomName, configUrl, userData, roomConfig } = this.props;
+    const { roomName, configUrl, userName, userData, roomConfig } = this.props;
     return (
       <ThemeProvider>
         <div style={{ height: '100%' }}>

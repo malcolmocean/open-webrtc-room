@@ -74,9 +74,10 @@ const PeerGrid: React.SFC<Props> = ({ roomAddress, activeSpeakerView }) => {
         ) : (
           <Placeholders.Consumer>
             {() => (
-              <H2>
-                There isn't anyone here (yet!)
-              </H2>
+              <span></span>
+              // <H2>
+              //   There isn't anyone here (yet!)
+              // </H2>
             )}
           </Placeholders.Consumer>
         );

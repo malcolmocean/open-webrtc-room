@@ -28,7 +28,6 @@ interface Props {
   pttMode: boolean;
   togglePttMode: (e: React.SyntheticEvent) => void;
   roomId: string;
-  allowInvites: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
 }
@@ -55,7 +54,6 @@ export default class Sidebar extends Component<Props, State> {
       pttMode,
       togglePttMode,
       roomId,
-      allowInvites,
       allowShareScreen,
       allowWalkieTalkieMode,
     } = this.props;

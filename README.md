@@ -48,9 +48,7 @@ SimpleWebRTC.run({
   openToPublic: true,
   showHostVideo: true,
   showVisitorVideo: true,
-  allowInvites: false,
   allowShareScreen: false,
   allowWalkieTalkieMode: false,
-  allowChat: true,
 });
 ```

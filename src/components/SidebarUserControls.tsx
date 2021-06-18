@@ -8,7 +8,6 @@ import {
 } from '@andyet/simplewebrtc';
 import React from 'react';
 import styled from 'styled-components';
-import DisplayNameInput from './DisplayNameInput';
 import LocalMediaControls from './LocalMediaControls';
 import Tooltip from './Tooltip';
 

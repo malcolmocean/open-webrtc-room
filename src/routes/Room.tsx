@@ -45,10 +45,8 @@ interface RoomConfig {
   openToPublic: boolean;
   showHostVideo: boolean;
   showVisitorVideo: boolean;
-  allowInvites: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
-  allowChat: boolean;
 }
 
 interface Props {
@@ -70,10 +68,8 @@ interface State {
   openToPublic: boolean;
   showHostVideo: boolean;
   showVisitorVideo: boolean;
-  allowInvites: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
-  allowChat: boolean;
 }
 
 class Index extends Component<Props, State> {
@@ -83,10 +79,8 @@ class Index extends Component<Props, State> {
       openToPublic,
       showHostVideo,
       showVisitorVideo,
-      allowInvites,
       allowShareScreen,
       allowWalkieTalkieMode,
-      allowChat
     } = props.roomConfig;
     this.state = {
       activeSpeakerView: false,
@@ -98,10 +92,8 @@ class Index extends Component<Props, State> {
       openToPublic,
       showHostVideo,
       showVisitorVideo,
-      allowInvites,
       allowShareScreen,
       allowWalkieTalkieMode,
-      allowChat
     };
   }
 
@@ -127,23 +119,22 @@ class Index extends Component<Props, State> {
                       pttMode={this.state.pttMode}
                       togglePttMode={this.togglePttMode}
                       roomId={room.id!}
-                      allowInvites={this.state.allowInvites}
                       allowShareScreen={this.state.allowShareScreen}
                       allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
                     />
                     <Connecting>
                       <LoadingState>
-                        <h1>Connecting...</h1>
+                        <span className='reactroom-state reactroom-state-connecting'>Connecting...</span>
                       </LoadingState>
                     </Connecting>
                     <Disconnected>
                       <LoadingState>
-                        <h1>Lost connection. Reattempting to join...</h1>
+                        <span className='reactroom-state reactroom-state-lost'>Lost connection. Reattempting to join...</span>
                       </LoadingState>
                     </Disconnected>
                     <Failed>
                       <LoadingState>
-                        <h1>Connection failed.</h1>
+                        <span className='reactroom-state reactroom-state-failed'>Connection failed.</span>
                       </LoadingState>
                     </Failed>
                     <Connected>
@@ -154,19 +145,19 @@ class Index extends Component<Props, State> {
                         />
                       ) : room.roomFull ? (
                         <LoadingState>
-                          <h1>This room is full.</h1>
+                          <span className='reactroom-state reactroom-state-full'>This room is full.</span>
                         </LoadingState>
                       ) : room.roomNotStarted ? (
                         <LoadingState>
-                          <h1>This room has not started yet.</h1>
+                          <span className='reactroom-state reactroom-state-notstarted'>This room has not started yet.</span>
                         </LoadingState>
                       ) : room.banned ? (
                         <LoadingState>
-                          <h1>This room is not available.</h1>
+                          <span className='reactroom-state reactroom-state-notavailable'>This room is not available.</span>
                         </LoadingState>
                       ) : (
                         <LoadingState>
-                          <h1>Joining room...</h1>
+                          <span className='reactroom-state reactroom-state-joining'>Joining room...</span>
                         </LoadingState>
                       )}
                     </Connected>

@@ -56,14 +56,15 @@ const PauseButton = styled(TalkyButton)(({ isOff }: MutePauseButtonProps) => ({
 const Container = styled.div({
   display: 'flex',
   marginBottom: '10px',
-  [mq.MOBILE]: {
-    '& button': {
-      flex: 1,
-      '&:first-of-type': {
-        marginRight: '10px'
-      }
-    }
-  },
+  // [mq.MOBILE]: {
+  //   '& button': {
+  //     flex: 1,
+  //     // border: '2px solid green',
+  //     '&:first-of-type': {
+  //       marginRight: '10px'
+  //     }
+  //   }
+  // },
   [mq.SMALL_DESKTOP]: {
     // justifyContent: 'space-between'
   }
