@@ -315,6 +315,7 @@ const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
         peer={peer}
         render={({ isMuted, mute, unmute, kick }) => (
           <div>
+            {/*
             <FullScreenButton
               onClick={toggleFullScreen}
               title={fullScreenActive ? 'Exit full screen' : `Show ${peer.displayName} full screen`}
@@ -325,6 +326,7 @@ const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
                 <FullScreenIcon fill="white" />
               )}
             </FullScreenButton>
+            */}
             <VisibilityButton title={`Hide video from ${peer.displayName}`}>
               <VisibilityIcon fill="white" onClick={() => togglePeer(peer.id)} />
             </VisibilityButton>
@@ -372,19 +374,38 @@ interface PeerGridItemProps {
 //    this is also the UI that's used when it's not fullscreen
 const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }) => {
   if (!media.length) {return <span />}
-  return <FullScreen style={{ width: '100%', height: '100%' }}>
-    {({ fullScreenActive, toggleFullScreen }) => (
-      <UserBox>
-        <PeerGridItemOverlay
-          peer={peer}
-          fullScreenActive={fullScreenActive}
-          audioIsMuted={!allAudioIsUnmuted(media)}
-          toggleFullScreen={toggleFullScreen}
-        />
-        <PeerGridItemMedia media={media} fullScreenActive={fullScreenActive || onlyVisible} />
-      </UserBox>
-    )}
-  </FullScreen>
+  return <>
+    <UserBox>
+      <PeerGridItemOverlay
+        peer={peer}
+        fullScreenActive={false}
+        audioIsMuted={!allAudioIsUnmuted(media)}
+        toggleFullScreen={async function () {}}
+      />
+      <PeerGridItemMedia media={media} fullScreenActive={false} />
+    </UserBox>
+    <UserBox>
+      <div style={{height: '150px', background: '#'+Math.floor(Math.random()*16777215).toString(16)}}></div>
+    </UserBox>
+  </>
 };
+
+// const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }) => {
+//   if (!media.length) {return <span />}
+//   return <FullScreen style={{ width: '100%', height: '100%' }}>
+//     {({ fullScreenActive, toggleFullScreen }) => (
+//       <UserBox>
+//         <PeerGridItemOverlay
+//           peer={peer}
+//           fullScreenActive={fullScreenActive}
+//           audioIsMuted={!allAudioIsUnmuted(media)}
+//           toggleFullScreen={toggleFullScreen}
+//         />
+//         <PeerGridItemMedia media={media} fullScreenActive={fullScreenActive || onlyVisible} />
+//       </UserBox>
+//     )}
+//   </FullScreen>
+// };
+
 
 export default PeerGridItem;

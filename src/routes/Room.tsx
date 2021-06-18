@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Haircheck from '../components/Haircheck';
 import PeerGrid from '../components/PeerGrid';
+import PeerRow from '../components/PeerRow';
 import Sidebar from '../components/Sidebar';
 import HiddenPeers from '../contexts/HiddenPeers';
 import mq from '../styles/media-queries';
@@ -139,7 +140,7 @@ class Index extends Component<Props, State> {
                     </Failed>
                     <Connected>
                       {room.joined ? (
-                        <PeerGrid
+                        <PeerRow
                           roomAddress={room.address!}
                           activeSpeakerView={this.state.activeSpeakerView}
                         />

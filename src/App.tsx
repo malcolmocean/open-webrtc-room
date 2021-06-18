@@ -26,6 +26,9 @@ const GlobalStyle = createGlobalStyle`
     max-width: 200px;
     max-height: 200px;
   }
+  #webrtcvideos_root .reactroom-ownvideo {
+    width: 200px;
+  }
 `;
 
 interface RoomConfig {
