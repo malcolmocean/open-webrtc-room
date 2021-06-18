@@ -1,4 +1,6 @@
-import { RequestUserMedia } from '@andyet/simplewebrtc';
+import { RequestUserMedia, Actions } from '@andyet/simplewebrtc';
+import { connect } from 'react-redux';
+
 import MicIcon from 'material-icons-svg/components/baseline/Mic';
 import MicOffIcon from 'material-icons-svg/components/baseline/MicOff';
 import VideocamIcon from 'material-icons-svg/components/baseline/Videocam';
@@ -69,6 +71,7 @@ const Container = styled.div({
 
 interface LocalMediaControlsProps {
   hasAudio: boolean;
+  hasVideo: boolean;
   isMuted: boolean;
   unmute: () => void;
   mute: () => void;
@@ -78,12 +81,15 @@ interface LocalMediaControlsProps {
   resumeVideo: () => void;
   pauseVideo: () => void;
   allowShareScreen: boolean;
+  removeAllAudio?: () => void;
+  removeAllVideo?: () => void;
 }
 
 // LocalMediaControls displays buttons to toggle the mute/pause state of the
 // user's audio/video.
 const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
   hasAudio,
+  hasVideo,
   isMuted,
   unmute,
   mute,
@@ -92,6 +98,8 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
   resumeVideo,
   pauseVideo,
   allowShareScreen,
+  removeAllAudio,
+  removeAllVideo
 }) => (
   <Container>
     <RequestUserMedia
@@ -104,16 +112,17 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
       render={(getMedia, captureState) => (
         <MuteButton
           isOff={isMuted}
-          isFlashing={isSpeakingWhileMuted || captureState.requestingMicrophoneCapture}
+          isFlashing={isSpeakingWhileMuted}
           onClick={() => {
             if (captureState.requestingCapture) {
               return;
             } else if (!hasAudio) {
-              getMedia();
+              getMedia({ audio: true });
             } else if (isMuted) {
               unmute();
             } else {
               mute();
+              if (removeAllAudio) removeAllAudio();
             }
           }}
         >
@@ -121,11 +130,44 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
         </MuteButton>
       )}
     />
-    <PauseButton isOff={isPaused} onClick={() => (isPaused ? resumeVideo() : pauseVideo())}>
-      {isPaused ? <VideocamOffIcon /> : <VideocamIcon />}
-    </PauseButton>
+    <RequestUserMedia
+      video={{
+        deviceId: {
+          ideal: localStorage.preferredVideoDeviceId
+        }
+      }}
+      share={true}
+      render={getMedia => (
+        <PauseButton
+          isOff={isPaused}
+          onClick={() => {
+            if (!hasVideo) {
+              getMedia({ video: true });
+            } else if (isPaused) {
+              resumeVideo();
+            } else {
+              pauseVideo();
+              if (removeAllVideo) removeAllVideo();
+            }
+          }}
+        >
+          {isPaused ? <VideocamOffIcon /> : <VideocamIcon />}
+        </PauseButton>
+      )}
+    />
     {allowShareScreen && <ScreenshareControls />}
   </Container>
 );
 
-export default LocalMediaControls;
+function mapDispatchToProps(
+  dispatch: any,
+  props: LocalMediaControlsProps
+): LocalMediaControlsProps {
+  return {
+    ...props,
+    removeAllAudio: () => dispatch(Actions.removeAllMedia('audio')),
+    removeAllVideo: () => dispatch(Actions.removeAllMedia('video'))
+  };
+}
+
+export default connect(null, mapDispatchToProps)(LocalMediaControls);

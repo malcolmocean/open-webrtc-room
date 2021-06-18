@@ -1,4 +1,11 @@
-import { LocalMediaList, Media, MediaControls, UserControls, Video } from '@andyet/simplewebrtc';
+import {
+  LocalMediaList,
+  Media,
+  MediaControls,
+  UserControls,
+  Video,
+  RequestUserMedia
+} from '@andyet/simplewebrtc';
 import React from 'react';
 import styled from 'styled-components';
 import DisplayNameInput from './DisplayNameInput';
@@ -112,11 +119,12 @@ const SidebarUserControls: React.SFC<Props> = ({
   pttMode,
   togglePttMode,
   allowShareScreen,
-  allowWalkieTalkieMode,
+  allowWalkieTalkieMode
 }) => (
   <UserControls
     render={({
       hasAudio,
+      hasVideo,
       isMuted,
       mute,
       unmute,
@@ -130,7 +138,6 @@ const SidebarUserControls: React.SFC<Props> = ({
     }) => (
       <div>
         <LocalVideo>
-          <DisplayNameInput displayName={user.displayName} setDisplayName={setDisplayName} />
           <LocalMediaList
             shared={true}
             render={({ media }) => {
@@ -149,14 +156,17 @@ const SidebarUserControls: React.SFC<Props> = ({
                 );
               }
 
-              return <EmptyVideo />;
+              return <div />;
             }}
           />
         </LocalVideo>
         <LocalMediaControls
           hasAudio={hasAudio}
+          hasVideo={hasVideo}
           isMuted={isMuted}
-          unmute={unmute}
+          unmute={() => {
+            unmute();
+          }}
           mute={mute}
           isPaused={isPaused}
           resumeVideo={() => resumeVideo({ screenCapture: false })}
@@ -164,7 +174,6 @@ const SidebarUserControls: React.SFC<Props> = ({
           isSpeaking={isSpeaking}
           isSpeakingWhileMuted={isSpeakingWhileMuted}
           allowShareScreen={allowShareScreen}
-          
         />
         <RoomModeToggles>
           {/*
@@ -182,13 +191,15 @@ const SidebarUserControls: React.SFC<Props> = ({
                 </ToggleContainer>
               </div>
             */}
-          {allowWalkieTalkieMode && <div>
-            <ToggleContainer>
-              <input type="checkbox" checked={pttMode} onChange={togglePttMode} />
-              Walkie Talkie Mode
-              <Tooltip text="Use spacebar to toggle your microphone on/off" />
-            </ToggleContainer>
-          </div>}
+          {allowWalkieTalkieMode && (
+            <div>
+              <ToggleContainer>
+                <input type="checkbox" checked={pttMode} onChange={togglePttMode} />
+                Walkie Talkie Mode
+                <Tooltip text="Use spacebar to toggle your microphone on/off" />
+              </ToggleContainer>
+            </div>
+          )}
         </RoomModeToggles>
       </div>
     )}

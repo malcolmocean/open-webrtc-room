@@ -78,45 +78,18 @@ interface Props {
 
 class App extends Component<Props> {
   public render() {
-    const {
-      roomName,
-      configUrl,
-      userData,
-      roomConfig,
-    } = this.props;
+    const { roomName, configUrl, userData, roomConfig } = this.props;
     return (
       <ThemeProvider>
-        <div style={{ height: "100%" }}>
+        <div style={{ height: '100%' }}>
           <GlobalStyle />
           <Container>
-            {roomName ? (
-              <Room
-                name={roomName}
-                configUrl={configUrl}
-                userData={userData}
-                roomConfig={roomConfig}
-              />
-            ) : (
-              <div className="container">
-                <form className="create-room-form" method="GET" action="/">
-                  <span className="create-room-form-input-wrapper">
-                    <span className="domain">localhost/</span>
-                    <input
-                      type="text"
-                      name="room"
-                      placeholder="choose a room name"
-                      className="create-room-form-input"
-                    />
-                  </span>
-                  <button
-                    className="create-room-form-button button button-default button-undefined"
-                    type="submit"
-                  >
-                    Start a chat
-                  </button>
-                </form>
-              </div>
-            )}
+            <Room
+              name={roomName ? roomName : 'Default Room'}
+              configUrl={configUrl}
+              userData={userData}
+              roomConfig={roomConfig}
+            />
           </Container>
         </div>
       </ThemeProvider>
