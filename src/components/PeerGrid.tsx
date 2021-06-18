@@ -7,7 +7,7 @@ import PeerGridItem from './PeerGridItem';
 
 const StyledGridLayout = styled(GridLayout)({
   flex: 1,
-  backgroundColor: '#eaecec',
+  // backgroundColor: '#eaecec',
   maxHeight: 'calc(var(--vh, 1vh) * 100)',
   '& video': {
     width: '100%',
@@ -32,19 +32,6 @@ const H2 = styled.h2`
   justify-content: center;
 `
 
-// const speakingPeers = peers.filter(p => p.speaking);
-
-// let peersToRender = [];
-// if (speakingPeers) {
-//   peersToRender = [...speakingPeers, peers.filter(p => p.hasSpokenInLast(5))];
-// } else {
-//   peersToRender = peers.filter(p => p.hasSpokenInLast(15));
-// }
-
-// if (peersToRender.length === 0) {
-//   peersToRender = peers;
-// }
-
 // PeerGrid is the main video display for Talky. It matches remoteMedia to
 // peers and then renders a PeerGridItem for each peer in the room.
 const PeerGrid: React.SFC<Props> = ({ roomAddress, activeSpeakerView }) => {
@@ -55,35 +42,24 @@ const PeerGrid: React.SFC<Props> = ({ roomAddress, activeSpeakerView }) => {
       room={roomAddress}
       render={({ peers }) => {
         const visiblePeers = peers.filter(p => !hiddenPeers.includes(p.id));
-        return visiblePeers.length > 0 || activeSpeakerView ? (
-          <StyledGridLayout
-            items={visiblePeers}
-            renderCell={(peer: Peer) => (
-              <RemoteMediaList
-                peer={peer.address}
-                render={({ media }) => (
-                  <PeerGridItem
-                    media={media}
-                    peer={peer}
-                    onlyVisible={visiblePeers.length === 1}
-                  />
-                )}
-              />
-            )}
-          />
-        ) : (
-          <Placeholders.Consumer>
-            {() => (
-              <span></span>
-              // <H2>
-              //   There isn't anyone here (yet!)
-              // </H2>
-            )}
-          </Placeholders.Consumer>
-        );
+        return <StyledGridLayout
+          items={visiblePeers}
+          renderCell={(peer: Peer) => (
+            <RemoteMediaList
+              peer={peer.address}
+              render={({ media }) => (
+                <PeerGridItem
+                  media={media}
+                  peer={peer}
+                  onlyVisible={visiblePeers.length === 1}
+                />
+              )}
+            />
+          )}
+        />
       }}
     />
-  );
-};
+  )
+}
 
-export default PeerGrid;
+export default PeerGrid

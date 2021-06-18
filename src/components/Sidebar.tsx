@@ -3,23 +3,22 @@ import styled, { css } from 'styled-components';
 import mq from '../styles/media-queries';
 import { colorToString } from '../utils/colorify';
 import Roster from './Roster';
-import SidebarLinks from './SidebarLinks';
 import SidebarUserControls from './SidebarUserControls';
 
-const Container = styled.div`
-  position: relative;
-  padding: 10px;
-  ${mq.MOBILE} {
-    position: absolute;
-    z-index: 200;
-    top: 0;
-    width: 185px;
-  }
-  ${mq.SMALL_DESKTOP} {
-    width: 220px;
-    border-right: ${({ theme }) => css`1px solid ${colorToString(theme.border)}`};
-  }
-`;
+// const Container = styled.div`
+//   position: relative;
+//   padding: 10px;
+//   ${mq.MOBILE} {
+//     position: absolute;
+//     z-index: 200;
+//     top: 0;
+//     width: 185px;
+//   }
+//   ${mq.SMALL_DESKTOP} {
+//     width: 220px;
+//     border-right: ${({ theme }) => css`1px solid ${colorToString(theme.border)}`};
+//   }
+// `;
 
 interface Props {
   roomAddress: string;
@@ -59,7 +58,7 @@ export default class Sidebar extends Component<Props, State> {
     } = this.props;
 
     return (
-      <Container>
+      <div className='reactroom-ownvideo'>
         <SidebarUserControls
           activeSpeakerView={activeSpeakerView}
           toggleActiveSpeakerView={toggleActiveSpeakerView}
@@ -68,9 +67,7 @@ export default class Sidebar extends Component<Props, State> {
           allowShareScreen={allowShareScreen}
           allowWalkieTalkieMode={allowWalkieTalkieMode}
         />
-        <Roster roomAddress={roomAddress} />
-        <SidebarLinks roomId={roomId} />
-      </Container>
+      </div>
     );
   }
 }

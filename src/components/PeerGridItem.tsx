@@ -68,10 +68,18 @@ const DisplayName = styled.span({
   }
 });
 
-const UserBox = styled.div({
-  border: '2px solid blue',
+const UserBox = styled.div.attrs(props => ({
+  className: 'reactroom-user-box',
+}))({
+  // border: '2px solid blue',
   display: 'inline-block',
   width: '200px',
+  '& .reactroom-user-box-overlay': {
+    display: 'none',
+  },
+  '&:hover .reactroom-user-box-overlay': {
+    display: 'flex',
+  }
 })
 
 const PictureInPictureContainer = styled.div({
@@ -143,16 +151,20 @@ const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, fullScree
     }
 
     return (
-      <UserBox className='user-box'>
+      <>
         {/* Camera */}
         <Video media={webcamStreams[0]} qualityProfile='low' />
         {/* Screenshare */}
         <LoadingVideo media={screenCaptureStreams[0]} />
-      </UserBox>
+      </>
     );
   }
 
-  return <AudioOnlyPeer />;
+  const audioStreams = media.filter(m => m.kind === 'audio' && !m.remoteDisabled);
+  if (audioStreams.length) {
+    return <AudioOnlyPeer />
+  }
+  return <span />
 };
 
 const PeerGridItemMediaOriginal: React.SFC<PeerGridItemMediaProps> = ({ media, fullScreenActive }) => {
@@ -192,7 +204,9 @@ const PeerGridItemMediaOriginal: React.SFC<PeerGridItemMediaProps> = ({ media, f
   return <AudioOnlyPeer />;
 };
 
-const Overlay = styled.div({
+const Overlay = styled.div.attrs(props => ({
+  className: 'reactroom-user-box-overlay',
+}))({
   position: 'absolute',
   top: 0,
   right: 0,
@@ -286,9 +300,11 @@ const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
   const { togglePeer } = useContext(HiddenPeers);
   return (
     <Overlay>
-      <div>
-        <DisplayName>{peer.displayName}</DisplayName>
-      </div>
+      {peer.displayName && peer.displayName !== 'Anonymous' &&
+        <div>
+          <DisplayName>{peer.displayName}</DisplayName>
+        </div>
+      }
       <RttContainer>{peer.rtt && <span>{peer.rtt}</span>}</RttContainer>
       <MuteIndicator>
         {peer.muted || audioIsMuted ? (
@@ -328,7 +344,7 @@ const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
                 </>
               )}
             </MuteButton>
-            <KickButton
+            {/*<KickButton
               title="Kick participant from the call"
               onClick={() => {
                 kick();
@@ -337,7 +353,7 @@ const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
             >
               <ReportIcon fill="red" />
               <span>Kick</span>
-            </KickButton>
+            </KickButton>*/}
           </div>
         )}
       />
@@ -354,10 +370,11 @@ interface PeerGridItemProps {
 // PeerGridItem renders various controls over a peer's media.
 // M: the fullscreen thing below is sort of a controller;
 //    this is also the UI that's used when it's not fullscreen
-const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }) => (
-  <FullScreen style={{ width: '100%', height: '100%' }}>
+const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }) => {
+  if (!media.length) {return <span />}
+  return <FullScreen style={{ width: '100%', height: '100%' }}>
     {({ fullScreenActive, toggleFullScreen }) => (
-      <>
+      <UserBox>
         <PeerGridItemOverlay
           peer={peer}
           fullScreenActive={fullScreenActive}
@@ -365,9 +382,9 @@ const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }
           toggleFullScreen={toggleFullScreen}
         />
         <PeerGridItemMedia media={media} fullScreenActive={fullScreenActive || onlyVisible} />
-      </>
+      </UserBox>
     )}
   </FullScreen>
-);
+};
 
 export default PeerGridItem;
