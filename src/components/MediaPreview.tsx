@@ -5,7 +5,7 @@ import mq from '../styles/media-queries';
 
 const Container = styled.div({
   position: 'relative',
-  height: '180px',
+  // height: '180px',
   width: '180px',
   // padding: '0 10px',
   // [mq.SMALL_DESKTOP]: {
@@ -14,7 +14,7 @@ const Container = styled.div({
   // },
   '& video': {
     width: '100%',
-    height: '100%',
+    // height: '100%',
     objectFit: 'contain',
     backgroundColor: '#262a2c'
   }

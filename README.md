@@ -1,4 +1,6 @@
-# Fast Effect Talky App
+# Thoroughly Modified SimpleWebRTC App (based on Talky demo)
+
+This was made for the [complice.co](https://complice.co) coworking rooms. This repo is used for testing & building but isn't particularly suitable to be used directly.
 
 To get started, you will first need to edit `public/index.html` to set your API key.
 
@@ -9,10 +11,37 @@ You can retrieve your API key by visiting [https://accounts.simplewebrtc.com](ht
 ## Running
 
 1. `npm install`
-2. Edit `public/index.html` as described above.
-3. `npm start`
-4. Go to [https://localhost:8080/](https://localhost:8080)
+2. Apply changes to @andyet/simplewebrtc (below)
+3. Edit `public/index.html` as described above.
+4. `npm start`
+5. Go to [https://localhost:8080/](https://localhost:8080)
 
+### Changes to base library
+
+Rather than properly fork the base library, given how we're using this, at present we're just making a couple small changes after running `npm install`.
+
+**in `adjustVideoCaptureResolution`**
+
+in `for (const video of localMedia) {`
+
+As of 2021-06-18, this is on line 3087 of `module.js`.
+
+Replace
+```javascript
+if (video.screenCapture) {
+    continue;
+}
+```
+
+with
+
+```javascript
+if (video.screenCapture) {
+    newConstraints.height = { ideal: Math.floor(width*(9/16)) };
+}
+```
+
+...to force screenCaptures to be ALSO scaled (for privacy reasons - these screenshares are so people can broadly see what you're up to, not for pair-programming or presenting) and to set their aspect ratio to 16:9 rather than whatever you want the webcams set to.
 
 ## Deploying to Static/Shared Hosting
 

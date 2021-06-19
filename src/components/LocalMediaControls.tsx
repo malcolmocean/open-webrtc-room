@@ -38,14 +38,17 @@ const pulseKeyFrames = keyframes`
   // }
 const AudioButton = styled(TalkyButton)<MutePauseButtonProps>`
   ${props =>
+    !props.isOff ? css`font-weight: bold;` : ''
+  }
+  ${props =>
     props.isFlashing
       ? css`
           animation: ${pulseKeyFrames} 0.5s ease-in-out infinite;
         `
       : ''}
-  }
   margin-right: 5px;
 `;
+  // }
 
 const VideoButton = styled(TalkyButton)(({ isOff }: MutePauseButtonProps) => ({
 }))
@@ -119,7 +122,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
       }}
       share={true}
       render={(getMedia, captureState) => (
-        hasAudio ? null : <AudioButton
+        <AudioButton
           isOff={isMuted}
           isFlashing={isSpeakingWhileMuted}
           onClick={() => {
@@ -162,7 +165,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
           }}
         >
           {isPaused ? <VideocamOffIcon /> : <VideocamIcon />}
-          <span>{isMuted ? "Share Video" : "Stop Video"}</span>
+          <span>{isPaused ? "Share Video" : "Stop Video"}</span>
         </VideoButton>
       )}
     />

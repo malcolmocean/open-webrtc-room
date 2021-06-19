@@ -1,3 +1,4 @@
+import * as SWRTC from '@andyet/simplewebrtc';
 import { Actions, reducer, Selectors } from '@andyet/simplewebrtc';
 import { VideoResolutionTier } from '@andyet/simplewebrtc/Definitions';
 import React from 'react';
@@ -102,13 +103,18 @@ function setUserName(name: string) {
 }
 
 function setLowRes() {
-  // const tiers = [[1, {width: 200, height: 200, frameRate: 20 }], [2, {width: 20, height: 20, frameRate: 10 }]] as VideoResolutionTier[]
   // okay, lower sizes/frameRates legit work
   // FYI: it counts everyone as a peer, not just people on video
-  const tiers = [[1, {width: 180, height: 180, frameRate: 20 }]] as VideoResolutionTier[]
+  const tiers = [
+    [1, {width: 180, height: 135, frameRate: 20 }],
+    // [1, {width: 180, height: 180, frameRate: 20 }],
+    // [1, {width: 180, height: 180, frameRate: 20 }],
+    // [2, {width: 20, height: 20, frameRate: 10 }] // demo tiny
+  ] as VideoResolutionTier[]
   dispatchAny(Actions.setVideoResolutionTiers(tiers))
 
-  // this seems to work for a moment, then revert
+  // this seems to work for a moment, then reverts
+  // even though setVideoResolutionTiers is just calling this under the hood
   // dispatchAny(Actions.adjustVideoCaptureResolution(100, 100, 20))
   // setTimeout(() => {
   //   dispatchAny(Actions.adjustVideoCaptureResolution(100, 100, 20))

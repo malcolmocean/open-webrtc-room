@@ -266,9 +266,11 @@ const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }
     </UserBox>
     {/* this colored box is just to simulate more users to see how wrapping etc works */}
     {/* they're also useful for getting an intuition for when react repaints */}
+    {/*
     <UserBox>
       <div style={{height: '150px', background: '#'+Math.floor(Math.random()*16777215).toString(16)}}></div>
     </UserBox>
+    */}
   </>
 };
 

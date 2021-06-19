@@ -48,7 +48,6 @@ const Text = styled.span({
 
 interface Props {
   text: string;
-  icon?: Component;
 }
 
 const Tooltip: React.SFC<Props> = (props) => {
