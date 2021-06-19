@@ -1,3 +1,5 @@
+/* this component was just Room in original demo but this is ambiguous/confusing
+with the Room from @andyet/simplewebrtc so changed to Vroom */
 import {
   Actions,
   Connected,
@@ -120,21 +122,6 @@ class Index extends Component<Props, State> {
                       allowShareScreen={this.state.allowShareScreen}
                       allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
                     />
-                    <Connecting>
-                      <LoadingState>
-                        <span className='reactroom-state reactroom-state-connecting'>Connecting...</span>
-                      </LoadingState>
-                    </Connecting>
-                    <Disconnected>
-                      <LoadingState>
-                        <span className='reactroom-state reactroom-state-lost'>Lost connection. Reattempting to join...</span>
-                      </LoadingState>
-                    </Disconnected>
-                    <Failed>
-                      <LoadingState>
-                        <span className='reactroom-state reactroom-state-failed'>Connection failed.</span>
-                      </LoadingState>
-                    </Failed>
                     <Connected>
                       {room.joined ? (
                         <PeerRow
@@ -159,6 +146,21 @@ class Index extends Component<Props, State> {
                         </LoadingState>
                       )}
                     </Connected>
+                    <Connecting>
+                      <LoadingState>
+                        <span className='reactroom-state reactroom-state-connecting'>Connecting...</span>
+                      </LoadingState>
+                    </Connecting>
+                    <Disconnected>
+                      <LoadingState>
+                        <span className='reactroom-state reactroom-state-lost'>Lost connection. Reattempting to join...</span>
+                      </LoadingState>
+                    </Disconnected>
+                    <Failed>
+                      <LoadingState>
+                        <span className='reactroom-state reactroom-state-failed'>Connection failed.</span>
+                      </LoadingState>
+                    </Failed>
                   </Container>
                 );
               }}
@@ -193,6 +195,7 @@ class Index extends Component<Props, State> {
     }
   };
 
+
   private mute = (e: KeyboardEvent) => {
     if (e.key === ' ') {
       this.props.mute!();
@@ -225,7 +228,7 @@ function mapDispatchToProps(dispatch: any, props: Props): Props {
   return {
     ...props,
     mute: () => dispatch(Actions.muteSelf()),
-    unmute: () => dispatch(Actions.unmuteSelf())
+    unmute: () => dispatch(Actions.unmuteSelf()),
   };
 }
 

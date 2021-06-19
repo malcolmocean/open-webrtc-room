@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import ThemeProvider from './components/ThemeProvider';
 import Placeholders from './contexts/Placeholders';
-import Room from './routes/Room';
+import Vroom from './routes/Vroom';
 import { PlaceholderGenerator } from './types';
 import { colorToString, darken } from './utils/colorify';
 
@@ -55,7 +55,7 @@ class App extends Component<Props> {
         <div style={{ height: '100%' }}>
           <GlobalStyle />
           <Container id='webrtcvideos_root'>
-            <Room
+            <Vroom
               name={roomName ? roomName : 'Default Room'}
               configUrl={configUrl}
               userData={userData}
@@ -64,7 +64,6 @@ class App extends Component<Props> {
           </Container>
         </div>
       </ThemeProvider>
-
     );
   }
 }

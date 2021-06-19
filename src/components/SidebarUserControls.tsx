@@ -136,7 +136,6 @@ const SidebarUserControls: React.SFC<Props> = ({
       pauseVideo,
       resumeVideo,
       user,
-      setDisplayName
     }) => (
       <div>
         <LocalVideo>
