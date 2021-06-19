@@ -6,15 +6,6 @@ import { applyMiddleware, combineReducers, compose as ReduxCompose, createStore 
 import Thunk from 'redux-thunk';
 import App from './App';
 import { PlaceholderGenerator } from './types';
-import getConfigFromMetaTag from './utils/metaConfig';
-import randomRoomName from './utils/randomRoomName';
-import Homepage from './screens/Homepage';
-
-const configUrl = getConfigFromMetaTag('config-url');
-const CONFIG_URL = configUrl ? configUrl : '';
-
-const userData = getConfigFromMetaTag('user-data');
-const USER_DATA = userData ? userData : '';
 
 const compose = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || ReduxCompose;
 const store = createStore(
@@ -35,19 +26,23 @@ function setVH() {
 setVH();
 window.addEventListener('resize', setVH);
 
-// Force the page to reload after 3 hours
-if (!localStorage.disablePageRefresh) {
-  setTimeout(() => {
-    window.location.reload(true);
-  }, 1000 * 60 * 60 * 3);
-} else {
-  console.log('Forced page refresh disabled');
-}
+// Force the page to reload after 24 hours
+// if (!localStorage.disablePageRefresh) {
+//   setTimeout(() => {
+//     window.location.reload(true);
+//   }, 1000 * 60 * 60 * 24);
+// } else {
+//   console.log('Forced page refresh disabled');
+// }
+// if this should be happening, the outer container app (eg Complice)
+// should be the one doing it -- and should detect idle state
 
 interface RunConfig {
+  root: HTMLElement;
   roomName: string;
   userName?: string;
-  root: HTMLElement;
+  configUrl?: string;
+  userData?: string;
   gridPlaceholder?: PlaceholderGenerator;
   haircheckHeaderPlaceholder?: PlaceholderGenerator;
   emptyRosterPlaceholder?: PlaceholderGenerator;
@@ -62,6 +57,8 @@ interface RunConfig {
 const run = ({
   roomName,
   userName,
+  configUrl = '',
+  userData = '',
   root,
   gridPlaceholder,
   haircheckHeaderPlaceholder,
@@ -73,22 +70,13 @@ const run = ({
   allowShareScreen = true,
   allowWalkieTalkieMode = true,
 }: RunConfig) => {
-  if (CONFIG_URL.endsWith('YOUR_API_KEY')) {
-    ReactDOM.render(
-      <div className="container" style={{ textAlign: 'left' }}>
-        Error: WebRTC unconfigured.
-      </div>,
-      root
-    );
-    return;
-  }
+  userName && setUserName(userName)
   ReactDOM.render(
     <Provider store={store}>
       <App
         roomName={roomName}
-        configUrl={CONFIG_URL}
-        userData={USER_DATA}
-        userName={userName}
+        configUrl={configUrl}
+        userData={userData}
         roomConfig={{
           openToPublic,
           showHostVideo,
@@ -116,9 +104,14 @@ const loadTemplate = (id: string): DocumentFragment | null => {
 //   store.dispatch(mute ? Actions.muteSelf : Actions.unmuteSelf());
 // }
 
+function setUserName(name: string) {
+  console.log("name", name)
+  ;(store.dispatch as any)(Actions.setDisplayName(name))
+}
+
 export default {
   run,
   loadTemplate,
-  randomRoomName,
+  setUserName,
   // muteViaStore,
 };

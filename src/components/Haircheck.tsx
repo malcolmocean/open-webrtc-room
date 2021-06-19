@@ -24,7 +24,6 @@ import { default as Meter } from './VolumeMeter';
 
 import Tooltip from './Tooltip';
 
-import getConfigFromMetaTag from '../utils/metaConfig';
 // import { createSoundPlayer, initSounds } from '../utils/sounds';
 
 const hasTestOutput = false // getConfigFromMetaTag('sound-test-output');

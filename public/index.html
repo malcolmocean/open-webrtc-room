@@ -9,10 +9,6 @@
 
     <!-- IMPORTANT SETUP -->
     <!-- Change the YOUR_API_KEY section of the config URL to match your API key --> 
-    <meta
-      name="simplewebrtc-config-url"
-      content="https://api.simplewebrtc.com/config/guest/491f6d482c8562d43e7be985"
-    />
     <title>WFH.cafe / complice.co</title>
     <link rel='stylesheet' href="http://localhost:5000/bootstrap/css/bootstrap.css">
     <link rel='stylesheet' href="http://localhost:5000/bootstrap/css/flat-ui.css">
@@ -70,6 +66,7 @@
       SimpleWebRTC.run({
         roomName: 'demo',
         userName: 'Malcolm',
+        configUrl: 'https://api.simplewebrtc.com/config/guest/491f6d482c8562d43e7be985',
         root: document.getElementById('root'),
         openToPublic: true,
         showHostVideo: true,
