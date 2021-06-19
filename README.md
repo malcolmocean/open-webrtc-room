@@ -43,6 +43,14 @@ if (video.screenCapture) {
 
 ...to force screenCaptures to be ALSO scaled (for privacy reasons - these screenshares are so people can broadly see what you're up to, not for pair-programming or presenting) and to set their aspect ratio to 16:9 rather than whatever you want the webcams set to.
 
+Some other interesting possibilities
+
+```javascript
+newConstraints.height = { min: width * 0.5, max: width * 1.5 };
+newConstraints.height = { min: height * 0.5, max: height * 1.5 };
+newConstraints.height = { ideal: Math.floor(width/(1920/1080)) };
+```
+
 ## Deploying to Static/Shared Hosting
 
 1. `npm install`

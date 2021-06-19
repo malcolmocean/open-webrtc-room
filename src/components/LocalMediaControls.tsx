@@ -166,15 +166,16 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
       )}
     />
     {allowShareScreen && !hasScreenCapture ? <ScreenshareControls /> : null}
+    {!chooseDevices ? null :
     <TalkyButton onClick={() => {
       if (removeAllAudio) removeAllAudio();
       if (removeAllVideo) removeAllVideo();
-      if (chooseDevices) chooseDevices();
+      chooseDevices();
     }}>
       <SettingsIcon />
-      &nbsp;
-      Settings
+      <span>Settings</span>
     </TalkyButton>
+    }
   </Container>
 );
 

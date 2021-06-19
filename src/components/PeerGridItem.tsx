@@ -164,7 +164,7 @@ interface PeerGridItemMediaProps {
 const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, peer, fullScreenActive }) => {
   const videoStreams = media.filter(m => m.kind === 'video' && !m.remoteDisabled);
   const webcamStreams = videoStreams.filter(s => !s.screenCapture);
-  const screenCaptureStreams = videoStreams.filter(s => s.screenCapture);
+  const screenStreams = videoStreams.filter(s => s.screenCapture);
 
   const { hiddenPeers } = useContext(HiddenPeers);
 
@@ -172,13 +172,13 @@ const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, peer, ful
     return (
       <>
         <VideoPlaceholder type='camera' hidden={!!webcamStreams.length} name={peer.displayName} />
-        <VideoPlaceholder type='screen' hidden={!!screenCaptureStreams.length} />
+        <VideoPlaceholder type='screen' hidden={!!screenStreams.length} />
       </>
     );
   }
 
   if (videoStreams.length > 0) {
-    if (webcamStreams.length && !screenCaptureStreams.length) {
+    if (webcamStreams.length && !screenStreams.length) {
       return (
         <>
           <Video media={webcamStreams[0]} qualityProfile='low' />
@@ -187,11 +187,11 @@ const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, peer, ful
       );
     }
 
-    if (screenCaptureStreams.length && !webcamStreams.length) {
+    if (screenStreams.length && !webcamStreams.length) {
       return (
         <>
           <VideoPlaceholder type='camera' name={peer.displayName} />
-          <Video media={screenCaptureStreams[0]} qualityProfile='low' />
+          <Video media={screenStreams[0]} qualityProfile='low' />
         </>
       );
     }
@@ -199,7 +199,7 @@ const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, peer, ful
     return (
       <>
         <Video media={webcamStreams[0]} qualityProfile='low' />
-        <Video media={screenCaptureStreams[0]} qualityProfile='low' />
+        <Video media={screenStreams[0]} qualityProfile='low' />
       </>
     );
   }
