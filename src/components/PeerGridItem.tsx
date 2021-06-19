@@ -13,49 +13,50 @@ import { TalkyButton } from '../styles/button';
 import AudioOnlyPeer from './AudioOnlyPeer';
 import FullScreen from './Fullscreen';
 
-const MuteButton = styled(TalkyButton)({
+const OverlayButton = styled(TalkyButton)({
   display: 'inline-block',
   justifySelf: 'flex-end',
-  opacity: 0.3,
+  opacity: 0.6,
   backgroundColor: 'black',
   color: 'white',
   transition: 'opacity 200ms linear',
-  marginBottom: '16px',
-  marginLeft: '4px',
   ':hover': {
     cursor: 'pointer',
     backgroundColor: 'black',
-    opacity: 0.7
+    opacity: 0.8
   },
   '& svg': {
     fill: 'white'
   }
+})
+
+const MuteButton = styled(OverlayButton)({
+  marginBottom: '16px',
+  marginLeft: '4px',
 });
 
-const KickButton = styled(TalkyButton)({
-  display: 'inline-block',
-  justifySelf: 'flex-end',
-  opacity: 0.3,
-  backgroundColor: 'red',
-  color: 'white',
-  transition: 'opacity 200ms linear',
+const KickButton = styled(OverlayButton)({
   marginBottom: '16px',
   marginLeft: '24px',
-  ':hover': {
-    cursor: 'pointer',
-    backgroundColor: 'red',
-    opacity: 0.7
-  },
-  '& svg': {
-    fill: 'white'
-  }
 });
+
+const FullScreenButton = styled(OverlayButton)({
+  marginBottom: '16px',
+  marginLeft: '16px',
+});
+
+const VisibilityButton = styled(OverlayButton)({
+  marginBottom: '16px',
+  marginLeft: '4px',
+});
+
 
 const DisplayName = styled.span({
   display: 'inline-block',
   backgroundColor: 'black',
-  opacity: 0.3,
+  opacity: 0.6,
   color: 'white',
+  lineHeight: '24px',
   marginTop: '16px',
   marginLeft: '4px',
   fontSize: '16px',
@@ -64,7 +65,7 @@ const DisplayName = styled.span({
   transition: 'opacity 200ms linear',
   '&:hover': {
     cursor: 'pointer',
-    opacity: 0.7
+    opacity: 0.8
   }
 });
 
@@ -73,8 +74,7 @@ const UserBox = styled.div.attrs(props => ({
 }))({
   // border: '2px solid blue',
   display: 'inline-block',
-  'line-height': '0',
-  width: '200px',
+  width: '180px',
   '& .reactroom-user-box-overlay': {
     display: 'none',
   },
@@ -83,36 +83,14 @@ const UserBox = styled.div.attrs(props => ({
   }
 })
 
-const PictureInPictureContainer = styled.div({
-  position: 'relative',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  height: '100%',
-  width: '100%',
-  '& video:first-of-type': {},
-  '& video:last-of-type': {
-    position: 'absolute',
-    top: '16px',
-    right: '16px',
-    width: '15%',
-    maxWidth: '200px',
-    minWidth: '100px',
-    objectPosition: 'top'
-  }
-});
-
 interface PeerGridItemMediaProps {
   media: Media[];
   fullScreenActive?: boolean;
 }
 
 // changed screenCapture quality profile from undefined to 'low'
-// doesn't seem to work locally but might remotely (based on reading docs)
-
-// PeerGridItemMedia renders a different visualization based on what media is
-// available from a peer. It will render video if the peer is sending video,
-// otherwise it renders an audio-only display.
+// doesn't seem to work via localhost but MIGHT remotely (based on reading docs)
+// there's a pretty strong bias to hi-res screenshare though
 const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, fullScreenActive }) => {
   const videoStreams = media.filter(m => m.kind === 'video' && !m.remoteDisabled);
 
@@ -145,57 +123,6 @@ const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, fullScree
   return <span />
 };
 
-const LoadingVideo: React.SFC<{
-  media: Media;
-  qualityProfile?: 'high' | 'medium' | 'low';
-}> = props => {
-  if (!props.media.loaded) {
-    return <AudioOnlyPeer />;
-  }
-  return (
-    <Video
-      media={props.media}
-      qualityProfile={props.qualityProfile || 'low'}
-    />
-  );
-};
-
-const PeerGridItemMediaOriginal: React.SFC<PeerGridItemMediaProps> = ({ media, fullScreenActive }) => {
-  const videoStreams = media.filter(m => m.kind === 'video' && !m.remoteDisabled);
-
-  if (videoStreams.length > 0) {
-    const webcamStreams = videoStreams.filter(s => !s.screenCapture);
-    const screenCaptureStreams = videoStreams.filter(s => s.screenCapture);
-
-    if (videoStreams.length === 1) {
-      return (
-        <LoadingVideo
-          media={videoStreams[0]}
-          qualityProfile={fullScreenActive ? 'high' : 'medium'}
-        />
-      );
-    }
-    if (screenCaptureStreams.length === 0) {
-      return (
-        <LoadingVideo
-          media={webcamStreams[0]}
-          qualityProfile={fullScreenActive ? 'high' : 'medium'}
-        />
-      );
-    }
-
-    return (
-      <PictureInPictureContainer>
-        {/* Screenshare */}
-        <LoadingVideo media={screenCaptureStreams[0]} />
-        {/* Camera */}
-        <Video media={webcamStreams[0]} qualityProfile="low" />
-      </PictureInPictureContainer>
-    );
-  }
-
-  return <AudioOnlyPeer />;
-};
 
 const Overlay = styled.div.attrs(props => ({
   className: 'reactroom-user-box-overlay',
@@ -228,44 +155,6 @@ const MuteIndicator = styled.span({
   textAlign: 'center',
   fontSize: '48px',
   opacity: 0.8
-});
-
-const FullScreenButton = styled(TalkyButton)({
-  display: 'inline-block',
-  justifySelf: 'flex-end',
-  opacity: 0.3,
-  backgroundColor: 'black',
-  color: 'white',
-  transition: 'opacity 200ms linear',
-  marginBottom: '16px',
-  marginLeft: '16px',
-  ':hover': {
-    cursor: 'pointer',
-    backgroundColor: 'black',
-    opacity: 0.7
-  },
-  '& svg': {
-    fill: 'white'
-  }
-});
-
-const VisibilityButton = styled(TalkyButton)({
-  display: 'inline-block',
-  justifySelf: 'flex-end',
-  opacity: 0.3,
-  backgroundColor: 'black',
-  color: 'white',
-  transition: 'opacity 200ms linear',
-  marginBottom: '16px',
-  marginLeft: '4px',
-  ':hover': {
-    cursor: 'pointer',
-    backgroundColor: 'black',
-    opacity: 0.7
-  },
-  '& svg': {
-    fill: 'white'
-  }
 });
 
 function allAudioIsUnmuted(media: Media[]): boolean {
@@ -363,8 +252,6 @@ interface PeerGridItemProps {
 }
 
 // PeerGridItem renders various controls over a peer's media.
-// M: the fullscreen thing below is sort of a controller;
-//    this is also the UI that's used when it's not fullscreen
 const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }) => {
   if (!media.length) {return <span />}
   return <>
@@ -377,12 +264,16 @@ const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }
       />
       <PeerGridItemMedia media={media} fullScreenActive={false} />
     </UserBox>
+    {/* this colored box is just to simulate more users to see how wrapping etc works */}
+    {/* they're also useful for getting an intuition for when react repaints */}
     <UserBox>
       <div style={{height: '150px', background: '#'+Math.floor(Math.random()*16777215).toString(16)}}></div>
     </UserBox>
   </>
 };
 
+// M: the fullscreen thing below is sort of a controller;
+//    this is also the UI that's used when it's not fullscreen
 // const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }) => {
 //   if (!media.length) {return <span />}
 //   return <FullScreen style={{ width: '100%', height: '100%' }}>

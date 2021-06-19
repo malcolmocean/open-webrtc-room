@@ -1,4 +1,5 @@
 import { Actions, reducer, Selectors } from '@andyet/simplewebrtc';
+import { VideoResolutionTier } from '@andyet/simplewebrtc/Definitions';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -67,6 +68,7 @@ const run = ({
   allowWalkieTalkieMode = true,
 }: RunConfig) => {
   userName && setUserName(userName)
+  setLowRes()
   ReactDOM.render(
     <Provider store={store}>
       <App
@@ -93,14 +95,24 @@ const loadTemplate = (id: string): DocumentFragment | null => {
   return null;
 };
 
-// not actually implemented properly probably
-// function muteViaStore(mute: boolean) {
-//   store.dispatch(mute ? Actions.muteSelf : Actions.unmuteSelf());
-// }
+const dispatchAny = store.dispatch as any
 
 function setUserName(name: string) {
-  console.log("name", name)
-  ;(store.dispatch as any)(Actions.setDisplayName(name))
+  dispatchAny(Actions.setDisplayName(name))
+}
+
+function setLowRes() {
+  // const tiers = [[1, {width: 200, height: 200, frameRate: 20 }], [2, {width: 20, height: 20, frameRate: 10 }]] as VideoResolutionTier[]
+  // okay, lower sizes/frameRates legit work
+  // FYI: it counts everyone as a peer, not just people on video
+  const tiers = [[1, {width: 180, height: 180, frameRate: 20 }]] as VideoResolutionTier[]
+  dispatchAny(Actions.setVideoResolutionTiers(tiers))
+
+  // this seems to work for a moment, then revert
+  // dispatchAny(Actions.adjustVideoCaptureResolution(100, 100, 20))
+  // setTimeout(() => {
+  //   dispatchAny(Actions.adjustVideoCaptureResolution(100, 100, 20))
+  // }, 4000)
 }
 
 export default {

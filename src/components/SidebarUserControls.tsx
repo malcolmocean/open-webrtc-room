@@ -142,7 +142,9 @@ const SidebarUserControls: React.SFC<Props> = ({
           <LocalMediaList
             shared={true}
             render={({ media }) => {
-              const videos = media.filter(m => m.kind === 'video');
+              let videos = media.filter(m => m.kind === 'video');
+              // videos = videos.filter((m, ix) => !ix || m.id !== videos[0].id) // remove dupes - to deal with a situation when firefox is being slow where double-clicking the send-video button can result in multiple streams
+              // doesn't actually work though because same cam but different media id
               if (videos.length > 0) {
                 return (
                   <>

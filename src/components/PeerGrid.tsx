@@ -24,14 +24,6 @@ interface Props {
   activeSpeakerView: boolean;
 }
 
-const H2 = styled.h2`
-  color: rgba(68, 68, 68, 0.25);
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-`
-
 // PeerGrid is the main video display for Talky. It matches remoteMedia to
 // peers and then renders a PeerGridItem for each peer in the room.
 const PeerGrid: React.SFC<Props> = ({ roomAddress, activeSpeakerView }) => {

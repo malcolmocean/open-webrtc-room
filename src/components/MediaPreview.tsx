@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import mq from '../styles/media-queries';
 
 const Container = styled.div({
-  height: '200px',
   position: 'relative',
-  width: '200px',
+  height: '180px',
+  width: '180px',
   // padding: '0 10px',
   // [mq.SMALL_DESKTOP]: {
   //   padding: '0',

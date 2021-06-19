@@ -22,12 +22,10 @@ const Container = styled.div`
 `;
 
 const GlobalStyle = createGlobalStyle`
-  #webrtcvideos_root video {
-    max-width: 200px;
-    max-height: 200px;
-  }
+  #webrtcvideos_root video,
   #webrtcvideos_root .reactroom-ownvideo {
-    width: 200px;
+    width: 180px;
+    max-height: 180px;
   }
 `;
 
