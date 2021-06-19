@@ -11,7 +11,6 @@ import {
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import Haircheck from '../components/Haircheck';
 import PeerGrid from '../components/PeerGrid';
 import PeerRow from '../components/PeerRow';
 import Sidebar from '../components/Sidebar';
@@ -61,7 +60,6 @@ interface Props {
 
 interface State {
   activeSpeakerView: boolean;
-  consentToJoin: boolean;
   pttMode: boolean;
   sendRtt: boolean;
   chatOpen: boolean;
@@ -85,7 +83,6 @@ class Index extends Component<Props, State> {
     } = props.roomConfig;
     this.state = {
       activeSpeakerView: false,
-      consentToJoin: true,
       pttMode: false,
       sendRtt: false,
       chatOpen: true,

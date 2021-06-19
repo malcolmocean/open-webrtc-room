@@ -4,6 +4,7 @@ import mq from '../styles/media-queries';
 import { colorToString } from '../utils/colorify';
 import Roster from './Roster';
 import SidebarUserControls from './SidebarUserControls';
+import Haircheck from './Haircheck';
 
 // const Container = styled.div`
 //   position: relative;
@@ -32,16 +33,16 @@ interface Props {
 }
 
 interface State {
+  inHaircheckMode: boolean;
   // showPasswordModal: boolean;
 }
 
-// Sidebar contains all the UI elements that are rendered in the Sidebar
-// inside a Room.
-// TODO: Use Router to navigate to feedback page.
 export default class Sidebar extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {};
+    this.state = {
+      inHaircheckMode: false
+    };
     // this.state = { showPasswordModal: false };
   }
 
@@ -58,16 +59,30 @@ export default class Sidebar extends Component<Props, State> {
     } = this.props;
 
     return (
-      <div className='reactroom-ownvideo'>
-        <SidebarUserControls
-          activeSpeakerView={activeSpeakerView}
-          toggleActiveSpeakerView={toggleActiveSpeakerView}
-          pttMode={pttMode}
-          togglePttMode={togglePttMode}
-          allowShareScreen={allowShareScreen}
-          allowWalkieTalkieMode={allowWalkieTalkieMode}
-        />
+      <div>
+      {this.state.inHaircheckMode ? (
+        <Haircheck
+          onAccept={() => {
+            this.setState({ inHaircheckMode: false });
+          }}
+        /> ) : (
+        <div className='reactroom-ownvideo'>
+          <SidebarUserControls
+            activeSpeakerView={activeSpeakerView}
+            toggleActiveSpeakerView={toggleActiveSpeakerView}
+            pttMode={pttMode}
+            togglePttMode={togglePttMode}
+            allowShareScreen={allowShareScreen}
+            allowWalkieTalkieMode={allowWalkieTalkieMode}
+            chooseDevices={() => this.chooseDevices()}
+          />
+        </div>
+        )}
       </div>
     );
+  }
+
+  private chooseDevices() {
+    this.setState({ inHaircheckMode: true });
   }
 }

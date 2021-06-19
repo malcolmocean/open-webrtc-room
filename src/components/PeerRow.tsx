@@ -44,6 +44,7 @@ const PeerRow: React.SFC<Props> = ({ roomAddress, activeSpeakerView }) => {
       room={roomAddress}
       render={({ peers }) => {
         const visiblePeers = peers.filter(p => !hiddenPeers.includes(p.id));
+        const EVENTUALLY = "instead of this, pass hiddenness down and display blank box in PeerGridItem"
         return <StyledRowLayout>
           {visiblePeers.map(peer => (
             <RemoteMediaList

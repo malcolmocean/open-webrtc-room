@@ -73,6 +73,7 @@ const UserBox = styled.div.attrs(props => ({
 }))({
   // border: '2px solid blue',
   display: 'inline-block',
+  'line-height': '0',
   width: '200px',
   '& .reactroom-user-box-overlay': {
     display: 'none',
@@ -106,20 +107,6 @@ interface PeerGridItemMediaProps {
   fullScreenActive?: boolean;
 }
 
-const LoadingVideo: React.SFC<{
-  media: Media;
-  qualityProfile?: 'high' | 'medium' | 'low';
-}> = props => {
-  if (!props.media.loaded) {
-    return <AudioOnlyPeer />;
-  }
-  return (
-    <Video
-      media={props.media}
-      qualityProfile={props.media.screenCapture ? 'low' : props.qualityProfile}
-    />
-  );
-};
 // changed screenCapture quality profile from undefined to 'low'
 // doesn't seem to work locally but might remotely (based on reading docs)
 
@@ -135,27 +122,18 @@ const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, fullScree
 
     if (videoStreams.length === 1) {
       return (
-        <LoadingVideo
+        <Video
           media={videoStreams[0]}
-          qualityProfile={fullScreenActive ? 'high' : 'medium'}
-        />
-      );
-    }
-    if (screenCaptureStreams.length === 0) {
-      return (
-        <LoadingVideo
-          media={webcamStreams[0]}
-          qualityProfile={fullScreenActive ? 'high' : 'medium'}
+          qualityProfile='low'
+          // qualityProfile={fullScreenActive ? 'high' : 'medium'}
         />
       );
     }
 
     return (
       <>
-        {/* Camera */}
         <Video media={webcamStreams[0]} qualityProfile='low' />
-        {/* Screenshare */}
-        <LoadingVideo media={screenCaptureStreams[0]} />
+        <Video media={screenCaptureStreams[0]} qualityProfile='low' />
       </>
     );
   }
@@ -165,6 +143,21 @@ const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, fullScree
     return <AudioOnlyPeer />
   }
   return <span />
+};
+
+const LoadingVideo: React.SFC<{
+  media: Media;
+  qualityProfile?: 'high' | 'medium' | 'low';
+}> = props => {
+  if (!props.media.loaded) {
+    return <AudioOnlyPeer />;
+  }
+  return (
+    <Video
+      media={props.media}
+      qualityProfile={props.qualityProfile || 'low'}
+    />
+  );
 };
 
 const PeerGridItemMediaOriginal: React.SFC<PeerGridItemMediaProps> = ({ media, fullScreenActive }) => {

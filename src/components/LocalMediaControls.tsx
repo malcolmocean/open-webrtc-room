@@ -1,6 +1,7 @@
 import { RequestUserMedia, Actions } from '@andyet/simplewebrtc';
 import { connect } from 'react-redux';
 
+import SettingsIcon from 'material-icons-svg/components/baseline/Settings';
 import MicIcon from 'material-icons-svg/components/baseline/Mic';
 import MicOffIcon from 'material-icons-svg/components/baseline/MicOff';
 import VideocamIcon from 'material-icons-svg/components/baseline/Videocam';
@@ -28,14 +29,14 @@ const pulseKeyFrames = keyframes`
   }
 `;
 
-const MuteButton = styled(TalkyButton)<MutePauseButtonProps>`
-  background-color: ${props => (props.isOff ? '#e60045' : '')};
-  &:not(:hover) svg {
-    fill: ${props => (props.isOff ? 'white' : '')};
-  }
-  &:hover svg {
-    fill: '';
-  }
+  // background-color: ${props => (props.isOff ? '#e60045' : '')};
+  // &:not(:hover) svg {
+  //   fill: ${props => (props.isOff ? 'white' : '')};
+  // }
+  // &:hover svg {
+  //   fill: '';
+  // }
+const AudioButton = styled(TalkyButton)<MutePauseButtonProps>`
   ${props =>
     props.isFlashing
       ? css`
@@ -46,15 +47,18 @@ const MuteButton = styled(TalkyButton)<MutePauseButtonProps>`
   margin-right: 5px;
 `;
 
-const PauseButton = styled(TalkyButton)(({ isOff }: MutePauseButtonProps) => ({
-  backgroundColor: isOff ? '#e60045' : '',
-  '& svg': {
-    fill: isOff ? 'white' : ''
-  }
-}));
+const VideoButton = styled(TalkyButton)(({ isOff }: MutePauseButtonProps) => ({
+}))
+// const VideoButton = styled(TalkyButton)(({ isOff }: MutePauseButtonProps) => ({
+//   backgroundColor: isOff ? '#e60045' : '',
+//   '& svg': {
+//     fill: isOff ? 'white' : ''
+//   }
+// }));
 
 const Container = styled.div({
   display: 'flex',
+  'flex-direction': 'column',
   marginBottom: '10px',
   // [mq.MOBILE]: {
   //   '& button': {
@@ -73,6 +77,7 @@ const Container = styled.div({
 interface LocalMediaControlsProps {
   hasAudio: boolean;
   hasVideo: boolean;
+  hasScreenCapture: boolean;
   isMuted: boolean;
   unmute: () => void;
   mute: () => void;
@@ -84,6 +89,7 @@ interface LocalMediaControlsProps {
   allowShareScreen: boolean;
   removeAllAudio?: () => void;
   removeAllVideo?: () => void;
+  chooseDevices?: () => void;
 }
 
 // LocalMediaControls displays buttons to toggle the mute/pause state of the
@@ -91,6 +97,7 @@ interface LocalMediaControlsProps {
 const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
   hasAudio,
   hasVideo,
+  hasScreenCapture,
   isMuted,
   unmute,
   mute,
@@ -100,9 +107,10 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
   pauseVideo,
   allowShareScreen,
   removeAllAudio,
-  removeAllVideo
+  removeAllVideo,
+  chooseDevices,
 }) => (
-  <Container>
+  <Container className='outliney-box tintbg self-video-send-btn self-video-send-btn2'>
     <RequestUserMedia
       audio={{
         deviceId: {
@@ -111,7 +119,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
       }}
       share={true}
       render={(getMedia, captureState) => (
-        <MuteButton
+        hasAudio ? null : <AudioButton
           isOff={isMuted}
           isFlashing={isSpeakingWhileMuted}
           onClick={() => {
@@ -128,7 +136,8 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
           }}
         >
           {isMuted ? <MicOffIcon /> : <MicIcon />}
-        </MuteButton>
+          <span>{isMuted ? "Share Audio" : "Mute Audio"}</span>
+        </AudioButton>
       )}
     />
     <RequestUserMedia
@@ -139,7 +148,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
       }}
       share={true}
       render={getMedia => (
-        <PauseButton
+        hasVideo ? null : <VideoButton
           isOff={isPaused}
           onClick={() => {
             if (!hasVideo) {
@@ -153,10 +162,19 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
           }}
         >
           {isPaused ? <VideocamOffIcon /> : <VideocamIcon />}
-        </PauseButton>
+          <span>{isMuted ? "Share Video" : "Stop Video"}</span>
+        </VideoButton>
       )}
     />
-    {allowShareScreen && <ScreenshareControls />}
+    {allowShareScreen && !hasScreenCapture ? <ScreenshareControls /> : null}
+    <TalkyButton onClick={() => {
+      if (removeAllAudio) removeAllAudio();
+      if (removeAllVideo) removeAllVideo();
+      if (chooseDevices) chooseDevices();
+    }}>
+      <SettingsIcon />
+      Settings
+    </TalkyButton>
   </Container>
 );
 

@@ -1,5 +1,5 @@
 import InfoIcon from 'material-icons-svg/components/baseline/Info';
-import React, { useState } from 'react';
+import React, { useState, Component } from 'react';
 import styled from 'styled-components';
 import { colorToString } from '../utils/colorify';
 
@@ -48,9 +48,10 @@ const Text = styled.span({
 
 interface Props {
   text: string;
+  icon?: Component;
 }
 
-const Tooltip: React.SFC<Props> = ({ text }) => {
+const Tooltip: React.SFC<Props> = (props) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const toggleTooltip = () => setShowTooltip(!showTooltip);
   return (
@@ -58,10 +59,10 @@ const Tooltip: React.SFC<Props> = ({ text }) => {
       {showTooltip && (
         <span>
           <Triangle />
-          <Text>{text}</Text>
+          <Text>{props.text}</Text>
         </span>
       )}
-      <InfoIcon />
+      {props.children || <InfoIcon />}
     </Container>
   );
 };

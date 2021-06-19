@@ -22,6 +22,8 @@ import { Error, Info } from './Alerts';
 import MediaPreview from './MediaPreview';
 import { default as Meter } from './VolumeMeter';
 
+import Tooltip from './Tooltip';
+
 import getConfigFromMetaTag from '../utils/metaConfig';
 // import { createSoundPlayer, initSounds } from '../utils/sounds';
 
@@ -56,28 +58,33 @@ const Controls = styled.div`
     width: 330px;
   }
   select {
-    border: ${({ theme }) => css`1px solid ${colorToString(theme.border)}`};
-    color: ${({ theme }) => colorToString(theme.foreground)};
-    height: 40px;
-    padding: 10px;
-    margin-top: 5px;
-    background-color: ${({ theme }) => colorToString(theme.background)};
+    height: 30px;
+    padding: 5px;
     font-size: 12px;
-    font-weight: bold;
-    width: 100%;
   }
   label {
     display: block;
     font-weight: bold;
     font-size: 12px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px 0;
+    position: relative;
+    padding-left: 25px;
 
     svg {
       font-size: 20px;
       vertical-align: bottom;
       margin-right: 5px;
       fill: ${({ theme }) => colorToString(theme.foreground)};
+    }
+    .reactroom-left-icon {
+      position: absolute;
+      left: 0;
+      top: 5px;
+    }
+
+    div {
+      height: 25px;
+      padding: 5px;
     }
   }
 `;
@@ -198,13 +205,6 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
 
           return (
             <Container>
-              <Placeholders.Consumer>
-                {({ haircheckHeaderPlaceholder }) => (
-                  <Header>
-                    <h2 style={{textAlign: "center"}}>Ready to join a video chat?</h2>
-                  </Header>
-                )}
-              </Placeholders.Consumer>
               <Preview>
                 <MediaPreview video={previewVideo} />
               </Preview>
@@ -244,8 +244,11 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                           <UserControls
                             render={({ user, setAudioOutputDevice }) => (
                               <label>
-                                <VolumeUpIcon />
-                                <span>Speaker:</span>
+                                <span className="reactroom-left-icon">
+                                  <Tooltip text="Speaker">
+                                    <VolumeUpIcon />
+                                  </Tooltip>
+                                </span>
                                 {hasTestOutput && (
                                   <TestOutputButton
                                     onClick={async e => {
@@ -260,6 +263,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                                   </TestOutputButton>
                                 )}
                                 <select
+                                  className="form-control"
                                   defaultValue={user.audioOutputDeviceId}
                                   disabled={!devices.length}
                                   onChange={e => {
@@ -274,7 +278,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                                     ))}
                                   {!audioOutputs.length && (
                                     <option key="" value="">
-                                      Default
+                                      Default Audio Output
                                     </option>
                                   )}
                                 </select>
@@ -284,8 +288,11 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                         </div>
                         <div>
                           <label>
-                            <VideocamIcon />
-                            <span>Camera:</span>
+                            <span className="reactroom-left-icon">
+                              <Tooltip text="Camera">
+                                <VideocamIcon />
+                              </Tooltip>
+                            </span>
                             {this.renderInputSelector(
                               'video',
                               hasCamera,
@@ -308,8 +315,11 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                         </div>
                         <div>
                           <label>
-                            <MicIcon />
-                            <span>Microphone:</span>
+                            <span className="reactroom-left-icon">
+                              <Tooltip text="Microphone">
+                                <MicIcon />
+                              </Tooltip>
+                            </span>
                             {this.renderInputSelector(
                               'audio',
                               hasMicrophone,
@@ -329,7 +339,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                               'Disable Microphone'
                             )}
                           </label>
-                          {!deviceSupportsVolumeMonitoring() ? null : previewAudio ? (
+                          {!deviceSupportsVolumeMonitoring() || !hasMicrophone ? null : previewAudio ? (
                             <VolumeMeter
                               media={previewAudio}
                               noInputTimeout={7000}
@@ -366,7 +376,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                           )}
                         </div>
                         <AcceptButtonContainer>
-                          <AcceptButton
+                          <button className="btn btn-default"
                             disabled={!this.state.showAccept || requestingCapture}
                             onClick={() => {
                               if (previewAudio) {
@@ -392,8 +402,8 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                           >
                             {!this.state.showAccept || requestingCapture
                               ? 'Getting Ready...'
-                              : 'Join Call'}
-                          </AcceptButton>
+                              : 'Save Settings'}
+                          </button>
                         </AcceptButtonContainer>
                       </>
                     );
@@ -524,6 +534,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
           } else {
             return (
               <select
+                className="form-control"
                 value={currentDevice ? currentDevice.deviceId : 'disable'}
                 onChange={e => {
                   const deviceId = e.target.value;

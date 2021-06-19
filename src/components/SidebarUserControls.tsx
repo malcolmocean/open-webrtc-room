@@ -32,7 +32,7 @@ const LocalVideo = styled.div({
     objectFit: 'cover',
     width: '100%',
     height: '100%',
-    marginBottom: '10px'
+    // marginBottom: '10px'
   }
 });
 
@@ -67,17 +67,18 @@ interface Props {
   togglePttMode: (e: React.SyntheticEvent<Element>) => void;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
+  chooseDevices: () => void;
 }
 
-interface LocalScreenProps {
-  screenshareMedia: Media;
+interface LocalMediaProps {
+  media: Media;
 }
 
-const LocalScreenContainer = styled.div({
+const LocalMediaContainer = styled.div({
   position: 'relative'
 });
 
-const LocalScreenOverlay = styled.div({
+const LocalMediaOverlay = styled.div({
   position: 'absolute',
   top: 0,
   right: 0,
@@ -97,17 +98,17 @@ const LocalScreenOverlay = styled.div({
   }
 });
 
-const LocalScreen: React.SFC<LocalScreenProps> = ({ screenshareMedia }) => (
+const LocalMediaView: React.SFC<LocalMediaProps> = ({ media }) => (
   <MediaControls
-    media={screenshareMedia}
+    media={media}
     autoRemove={true}
     render={({ media, stopSharing }) => (
-      <LocalScreenContainer>
-        <LocalScreenOverlay onClick={stopSharing}>
+      <LocalMediaContainer>
+        <LocalMediaOverlay onClick={stopSharing}>
           <span>Stop sharing</span>
-        </LocalScreenOverlay>
+        </LocalMediaOverlay>
         {media && <Video media={media!} />}
-      </LocalScreenContainer>
+      </LocalMediaContainer>
     )}
   />
 );
@@ -118,12 +119,14 @@ const SidebarUserControls: React.SFC<Props> = ({
   pttMode,
   togglePttMode,
   allowShareScreen,
-  allowWalkieTalkieMode
+  allowWalkieTalkieMode,
+  chooseDevices,
 }) => (
   <UserControls
     render={({
       hasAudio,
       hasVideo,
+      hasScreenCapture,
       isMuted,
       mute,
       unmute,
@@ -145,11 +148,7 @@ const SidebarUserControls: React.SFC<Props> = ({
                 return (
                   <>
                     {videos.map(m =>
-                      m.screenCapture ? (
-                        <LocalScreen key={m.id} screenshareMedia={m} />
-                      ) : (
-                        <Video key={m.id} media={m} />
-                      )
+                      <LocalMediaView key={m.id} media={m} />
                     )}
                   </>
                 );
@@ -162,6 +161,7 @@ const SidebarUserControls: React.SFC<Props> = ({
         <LocalMediaControls
           hasAudio={hasAudio}
           hasVideo={hasVideo}
+          hasScreenCapture={hasScreenCapture}
           isMuted={isMuted}
           unmute={() => {
             unmute();
@@ -173,23 +173,9 @@ const SidebarUserControls: React.SFC<Props> = ({
           isSpeaking={isSpeaking}
           isSpeakingWhileMuted={isSpeakingWhileMuted}
           allowShareScreen={allowShareScreen}
+          chooseDevices={() => chooseDevices()}
         />
         <RoomModeToggles>
-          {/*
-              Disabled until SDK changes fixed to handle case where no one is speaking.
-
-              <div>
-                <ToggleContainer>
-                  <input
-                    type="checkbox"
-                    checked={activeSpeakerView}
-                    onChange={toggleActiveSpeakerView}
-                  />
-                  Active Speaker View
-                  <Tooltip text="Only show the active speaker in the podium" />
-                </ToggleContainer>
-              </div>
-            */}
           {allowWalkieTalkieMode && (
             <div>
               <ToggleContainer>
