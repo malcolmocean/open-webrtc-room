@@ -25,7 +25,18 @@
         allowShareScreen: true,
         allowWalkieTalkieMode: false,
       });
+      function toggleDarktheme() {
+        if (/darktheme/.test(document.body.className)) {
+          document.body.className = document.body.className.replace(/ *darktheme */, '')
+        } else {
+          document.body.className = document.body.className += ' darktheme'
+        }
+      }
     </script>
+
+    <div style='display: inline-block; position: absolute; right: 10px; bottom: 10px;'>
+      <button class='btn btn-ghost btn-black' onclick='toggleDarktheme()'>dark</button>
+    </div>
     
     <link href='https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,900' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>

@@ -4,12 +4,21 @@ import {
   MediaControls,
   UserControls,
   Video,
-  RequestUserMedia
+  RequestUserMedia,
+  VolumeMeter
 } from '@andyet/simplewebrtc';
 import React from 'react';
 import styled from 'styled-components';
 import LocalMediaControls from './LocalMediaControls';
 import Tooltip from './Tooltip';
+import { default as MyVolumeMeter } from './VolumeMeter';
+
+const Volume = styled.div({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignContent: 'middle'
+});
 
 const LocalVideo = styled.div({
   position: 'relative',
@@ -159,6 +168,32 @@ const SidebarUserControls: React.SFC<Props> = ({
             }}
           />
         </LocalVideo>
+        <LocalMediaList
+          shared={true}
+          render={({ media }) => {
+            const audio = media.find(m => m.kind === 'audio');
+            if (!audio) {return null}
+            return (<VolumeMeter
+              media={audio}
+              noInputTimeout={7000}
+              render={({ noInput, volume, speaking }) => {
+                console.log('volume', volume)
+                console.log('speaking', speaking)
+                return (
+                <Volume>
+                  <MyVolumeMeter
+                    buckets={10}
+                    volume={-volume}
+                    speaking={speaking}
+                    loaded={!!audio.loaded}
+                    noInput={noInput}
+                    requesting={false}
+                  />
+                </Volume>
+              )}}
+            />)
+          }}
+        />
         <LocalMediaControls
           hasAudio={hasAudio}
           hasVideo={hasVideo}

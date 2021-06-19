@@ -108,6 +108,7 @@ const Volume = styled.div({
 });
 
 const AcceptButtonContainer = styled.div({
+  marginTop: '10px',
   textAlign: 'center'
 });
 
