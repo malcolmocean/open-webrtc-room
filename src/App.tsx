@@ -33,8 +33,6 @@ const GlobalStyle = createGlobalStyle`
 
 interface RoomConfig {
   openToPublic: boolean;
-  showHostVideo: boolean;
-  showVisitorVideo: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
 }

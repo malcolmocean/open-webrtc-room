@@ -48,8 +48,6 @@ interface RunConfig {
   emptyRosterPlaceholder?: PlaceholderGenerator;
   homepagePlaceholder?: PlaceholderGenerator;
   openToPublic: boolean;
-  showHostVideo: boolean;
-  showVisitorVideo: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
 }
@@ -65,8 +63,6 @@ const run = ({
   emptyRosterPlaceholder,
   homepagePlaceholder,
   openToPublic = true,
-  showHostVideo = true,
-  showVisitorVideo = true,
   allowShareScreen = true,
   allowWalkieTalkieMode = true,
 }: RunConfig) => {
@@ -79,8 +75,6 @@ const run = ({
         userData={userData}
         roomConfig={{
           openToPublic,
-          showHostVideo,
-          showVisitorVideo,
           allowShareScreen,
           allowWalkieTalkieMode,
         }}

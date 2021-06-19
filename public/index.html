@@ -7,13 +7,30 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
 
-    <!-- IMPORTANT SETUP -->
-    <!-- Change the YOUR_API_KEY section of the config URL to match your API key --> 
     <title>WFH.cafe / complice.co</title>
     <link rel='stylesheet' href="http://localhost:5000/bootstrap/css/bootstrap.css">
     <link rel='stylesheet' href="http://localhost:5000/bootstrap/css/flat-ui.css">
     <link rel='stylesheet' href="http://localhost:5000/css/style.css">
-<!--     <style type="text/css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/javascript">
+      SimpleWebRTC.run({
+        roomName: 'demo',
+        userName: ['Bob', 'Jane', 'Hussain', 'Anju', 'Sean'][Math.floor(5*Math.random())],
+        // Change the last section of the configUrl to match your API key
+        configUrl: 'https://api.simplewebrtc.com/config/guest/491f6d482c8562d43e7be985',
+        root: document.getElementById('root'),
+        openToPublic: true,
+        allowShareScreen: true,
+        allowWalkieTalkieMode: false,
+      });
+    </script>
+    
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,900' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
+    <!--
+    <style type="text/css">
       html {
         box-sizing: border-box;
       }
@@ -50,33 +67,5 @@
         cursor: pointer;
       }
     </style> -->
-    <!-- <style type='text/css'>
-      video {
-        max-width: 200px;
-        max-height: 200px;
-      }
-    </style> -->
-  </head>
-  <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <div id="root"></div>
-    <script type="text/javascript">
-      SimpleWebRTC.run({
-        roomName: 'demo',
-        userName: 'Malcolm',
-        configUrl: 'https://api.simplewebrtc.com/config/guest/491f6d482c8562d43e7be985',
-        root: document.getElementById('root'),
-        openToPublic: true,
-        showHostVideo: true,
-        showVisitorVideo: true,
-        allowShareScreen: true,
-        allowWalkieTalkieMode: false,
-      });
-    </script>
-    
-    <link href='https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,900' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
   </body>
 </html>

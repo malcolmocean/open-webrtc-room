@@ -45,8 +45,6 @@ const LoadingState = styled.div({
 
 interface RoomConfig {
   openToPublic: boolean;
-  showHostVideo: boolean;
-  showVisitorVideo: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
 }
@@ -67,8 +65,6 @@ interface State {
   chatOpen: boolean;
   hiddenPeers: string[];
   openToPublic: boolean;
-  showHostVideo: boolean;
-  showVisitorVideo: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
 }
@@ -78,8 +74,6 @@ class Index extends Component<Props, State> {
     super(props);
     const {
       openToPublic,
-      showHostVideo,
-      showVisitorVideo,
       allowShareScreen,
       allowWalkieTalkieMode,
     } = props.roomConfig;
@@ -90,8 +84,6 @@ class Index extends Component<Props, State> {
       chatOpen: true,
       hiddenPeers: [],
       openToPublic,
-      showHostVideo,
-      showVisitorVideo,
       allowShareScreen,
       allowWalkieTalkieMode,
     };
