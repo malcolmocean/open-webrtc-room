@@ -52,6 +52,8 @@ interface RunConfig {
   openToPublic: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
+  audioModeType: 'always' | 'sometimes' | 'never';
+  audioOffMessage: string,
 }
 
 const run = ({
@@ -67,6 +69,8 @@ const run = ({
   openToPublic = true,
   allowShareScreen = true,
   allowWalkieTalkieMode = true,
+  audioModeType = 'never',
+  audioOffMessage = 'Audio is turned off sometimes in this room',
 }: RunConfig) => {
   userName && setUserName(userName)
   setLowRes()
@@ -80,6 +84,8 @@ const run = ({
           openToPublic,
           allowShareScreen,
           allowWalkieTalkieMode,
+          audioModeType,
+          audioOffMessage,
         }}
       />
     </Provider>,
@@ -103,27 +109,16 @@ function setUserName(name: string) {
 }
 
 function setLowRes() {
-  // okay, lower sizes/frameRates legit work
   // FYI: it counts everyone as a peer, not just people on video
   const tiers = [
     [1, {width: 180, height: 135, frameRate: 20 }],
-    // [1, {width: 180, height: 180, frameRate: 20 }],
-    // [1, {width: 180, height: 180, frameRate: 20 }],
-    // [2, {width: 20, height: 20, frameRate: 10 }] // demo tiny
+    // [2, {width: 20, height: 15, frameRate: 10 }] // demo tiny
   ] as VideoResolutionTier[]
   dispatchAny(Actions.setVideoResolutionTiers(tiers))
-
-  // this seems to work for a moment, then reverts
-  // even though setVideoResolutionTiers is just calling this under the hood
-  // dispatchAny(Actions.adjustVideoCaptureResolution(100, 100, 20))
-  // setTimeout(() => {
-  //   dispatchAny(Actions.adjustVideoCaptureResolution(100, 100, 20))
-  // }, 4000)
 }
 
 export default {
   run,
   loadTemplate,
   setUserName,
-  // muteViaStore,
 };

@@ -59,7 +59,7 @@ export default class Sidebar extends Component<Props, State> {
     } = this.props;
 
     return (
-      <div>
+      <div style={{clear: 'both'}}>
       {this.state.inHaircheckMode ? (
         <Haircheck
           onAccept={() => {

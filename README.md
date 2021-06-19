@@ -22,11 +22,8 @@ Rather than properly fork the base library, given how we're using this, at prese
 
 **in `adjustVideoCaptureResolution`**
 
-in `for (const video of localMedia) {`
+Move the code from `const newConstraints = {};` to this loop `for (const video of localMedia) {` *into* the loop, then replace
 
-As of 2021-06-18, this is on line 3087 of `module.js`.
-
-Replace
 ```javascript
 if (video.screenCapture) {
     continue;

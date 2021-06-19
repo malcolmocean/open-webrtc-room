@@ -33,6 +33,8 @@ interface RoomConfig {
   openToPublic: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
+  audioModeType: 'always' | 'sometimes' | 'never';
+  audioOffMessage: string;
 }
 
 interface Props {
@@ -50,7 +52,7 @@ class App extends Component<Props> {
       <ThemeProvider>
         <div style={{ height: '100%' }}>
           <GlobalStyle />
-          <Container id='webrtcvideos_root'>
+          <Container>
             <Vroom
               name={roomName ? roomName : 'Default Room'}
               configUrl={configUrl}

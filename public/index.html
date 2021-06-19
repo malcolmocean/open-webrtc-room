@@ -6,24 +6,25 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-
     <title>WFH.cafe / complice.co</title>
     <link rel='stylesheet' href="http://localhost:5000/bootstrap/css/bootstrap.css">
     <link rel='stylesheet' href="http://localhost:5000/bootstrap/css/flat-ui.css">
     <link rel='stylesheet' href="http://localhost:5000/css/style.css">
   </head>
-  <body>
-    <div id="root"></div>
+  <body class='darktheme'>
+    <div id="webrtcvideos_root"></div>
     <script type="text/javascript">
       SimpleWebRTC.run({
         roomName: 'demo',
         userName: ['Bob', 'Jane', 'Hussain', 'Anju', 'Sean'][Math.floor(5*Math.random())],
         // Change the last section of the configUrl to match your API key
         configUrl: 'https://api.simplewebrtc.com/config/guest/491f6d482c8562d43e7be985',
-        root: document.getElementById('root'),
+        root: document.getElementById('webrtcvideos_root'),
         openToPublic: true,
         allowShareScreen: true,
         allowWalkieTalkieMode: false,
+        audioModeType: 'never',
+        // audioOffMessage: "Audio? No way. Okay maybe sometimes."
       });
       function toggleDarktheme() {
         if (/darktheme/.test(document.body.className)) {
@@ -40,43 +41,5 @@
     
     <link href='https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,900' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
-    <!--
-    <style type="text/css">
-      html {
-        box-sizing: border-box;
-      }
-
-      *,
-      *:before,
-      *:after {
-        box-sizing: inherit;
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-      }
-
-      body, html {
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-        font-size: 16px;
-        line-height: 1.5;
-        color: #4d5659;
-      }
-
-      a {
-        background-color: transparent;
-        text-decoration: none;
-      }
-
-      button:hover {
-        cursor: pointer;
-      }
-    </style> -->
   </body>
 </html>

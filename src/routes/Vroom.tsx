@@ -21,6 +21,7 @@ import PeerRow from '../components/PeerRow';
 import Sidebar from '../components/Sidebar';
 import LocalMediaControls from '../components/LocalMediaControls';
 import HiddenPeers from '../contexts/HiddenPeers';
+import { AudioModes } from '../contexts/AudioModes';
 import mq from '../styles/media-queries';
 
 const RootContainer = styled.div({
@@ -32,6 +33,7 @@ const RootContainer = styled.div({
 const Container = styled.div({
   flex: 1,
   display: 'flex',
+  flexWrap: 'wrap',
   position: 'relative',
   flexDirection: 'column',
   [mq.SMALL_DESKTOP]: {
@@ -47,10 +49,22 @@ const LoadingState = styled.div({
   position: 'relative'
 });
 
+const AudioOffBanner = styled.div({
+  color: 'black',
+  background: '#fe88',
+  textAlign: 'center',
+  padding: '5px',
+  fontFamily: 'Montserrat, "Century Gothic", sans-serif',
+  flex: '0 0 100%',
+  height: 'auto',
+})
+
 interface RoomConfig {
   openToPublic: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
+  audioModeType: 'always' | 'sometimes' | 'never';
+  audioOffMessage: string;
 }
 
 interface Props {
@@ -71,6 +85,9 @@ interface State {
   openToPublic: boolean;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
+  audioModeType: 'always' | 'sometimes' | 'never';
+  audioMode: 'on' | 'off';
+  audioOffMessage: string;
 }
 
 class Index extends Component<Props, State> {
@@ -80,6 +97,8 @@ class Index extends Component<Props, State> {
       openToPublic,
       allowShareScreen,
       allowWalkieTalkieMode,
+      audioModeType,
+      audioOffMessage,
     } = props.roomConfig;
     this.state = {
       activeSpeakerView: false,
@@ -87,6 +106,9 @@ class Index extends Component<Props, State> {
       sendRtt: false,
       chatOpen: true,
       hiddenPeers: [],
+      audioModeType,
+      audioOffMessage,
+      audioMode: 'off',
       openToPublic,
       allowShareScreen,
       allowWalkieTalkieMode,
@@ -103,17 +125,23 @@ class Index extends Component<Props, State> {
             togglePeer: this.togglePeer
           }}
         >
-          <RootContainer>
-            <Room name={this.props.name}>
-              {({ room }) => {
-                return (
+          <AudioModes.Provider
+            value={{
+              audioModeType: this.state.audioModeType,
+              audioMode: this.state.audioMode,
+              audioOffMessage: this.state.audioOffMessage,
+              setAudioMode: this.setAudioMode
+            }}
+          >
+            <RootContainer>
+              <Room name={this.props.name}>
+                {({ room }) => (
                   <Container>
                     <LocalMediaList
                       render={(localList) => (
                         <RemoteMediaList
                         render={(remoteList) => {
                           if (!localList.media.length && !remoteList.media.length) {
-                            console.log("EMPTY LISTS")
                             return <LocalMediaControls
                               isInline={true}
                               hasAudio={false}
@@ -130,56 +158,30 @@ class Index extends Component<Props, State> {
                               allowShareScreen={this.state.allowShareScreen}
                               // chooseDevices={() => chooseDevices()}
                             />
-                            // return <UserControls
-                            //   render={({
-                            //     hasAudio,
-                            //     hasVideo,
-                            //     hasScreenCapture,
-                            //     isMuted,
-                            //     mute,
-                            //     unmute,
-                            //     isPaused,
-                            //     isSpeaking,
-                            //     isSpeakingWhileMuted,
-                            //     pauseVideo,
-                            //     resumeVideo,
-                            //     user,
-                            //   }) => (
-                            //     <LocalMediaControls
-                            //       hasAudio={hasAudio}
-                            //       hasVideo={hasVideo}
-                            //       hasScreenCapture={hasScreenCapture}
-                            //       isMuted={isMuted}
-                            //       unmute={() => {
-                            //         unmute();
-                            //       }}
-                            //       mute={mute}
-                            //       isPaused={isPaused}
-                            //       resumeVideo={() => resumeVideo({ screenCapture: false })}
-                            //       pauseVideo={() => pauseVideo({ screenCapture: false })}
-                            //       isSpeaking={isSpeaking}
-                            //       isSpeakingWhileMuted={isSpeakingWhileMuted}
-                            //       allowShareScreen={this.state.allowShareScreen}
-                            //       // allowShareScreen={true}
-                            //     />
-                            //     // TODO = clean this up / make more programmatic
-                            //       // chooseDevices={() => chooseDevices()}
-                            //   )}
-                            // />
-
-                            // <LocalMediaControls>
-                            // <LocalMediaControlsOriginal
                           }
-                          return <Sidebar
-                            roomAddress={room.address!}
-                            activeSpeakerView={this.state.activeSpeakerView}
-                            toggleActiveSpeakerView={this.toggleActiveSpeakerView}
-                            pttMode={this.state.pttMode}
-                            togglePttMode={this.togglePttMode}
-                            roomId={room.id!}
-                            allowShareScreen={this.state.allowShareScreen}
-                            allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
-                          />
+                          return <>
+                            {this.state.audioModeType == 'never' ? null : (this.state.audioMode == 'off' ? <AudioOffBanner>{this.state.audioOffMessage}</AudioOffBanner> : null)}
+                            {/*
+                            {this.state.audioModeType == 'never' ? <UserControls
+                               render={({setGlobalVolumeLimit}) => {
+                                 console.log("setGlobalVolumeLimit(-Infinity)")
+                                 // setGlobalVolumeLimit(-Infinity)
+                                 // can't do this - causes recursive update loop
+                                 return null
+                               }}
+                               /> : null}
+                            */}
+                            <Sidebar
+                              roomAddress={room.address!}
+                              activeSpeakerView={this.state.activeSpeakerView}
+                              toggleActiveSpeakerView={this.toggleActiveSpeakerView}
+                              pttMode={this.state.pttMode}
+                              togglePttMode={this.togglePttMode}
+                              roomId={room.id!}
+                              allowShareScreen={this.state.allowShareScreen}
+                              allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
+                            />
+                          </>
                         }}
                         />
                       )}
@@ -224,10 +226,10 @@ class Index extends Component<Props, State> {
                       </LoadingState>
                     </Failed>
                   </Container>
-                );
-              }}
-            </Room>
-          </RootContainer>
+                )}
+              </Room>
+            </RootContainer>
+          </AudioModes.Provider>
         </HiddenPeers.Provider>
       </Provider>
     );
@@ -257,7 +259,6 @@ class Index extends Component<Props, State> {
     }
   };
 
-
   private mute = (e: KeyboardEvent) => {
     if (e.key === ' ') {
       this.props.mute!();
@@ -284,6 +285,10 @@ class Index extends Component<Props, State> {
       this.setState({ hiddenPeers: [...this.state.hiddenPeers, peerId] });
     }
   };
+
+  private setAudioMode = (mode: 'on' | 'off') => {
+    this.setState({audioMode: mode})
+  }
 }
 
 function mapDispatchToProps(dispatch: any, props: Props): Props {

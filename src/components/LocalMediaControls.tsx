@@ -6,11 +6,12 @@ import MicIcon from 'material-icons-svg/components/baseline/Mic';
 import MicOffIcon from 'material-icons-svg/components/baseline/MicOff';
 import VideocamIcon from 'material-icons-svg/components/baseline/Videocam';
 import VideocamOffIcon from 'material-icons-svg/components/baseline/VideocamOff';
-import React from 'react';
+import React, { useContext } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { TalkyButton } from '../styles/button';
 import mq from '../styles/media-queries';
 import ScreenshareControls from './ScreenshareControls';
+import { AudioModes } from '../contexts/AudioModes';
 
 interface MutePauseButtonProps {
   isFlashing?: boolean;
@@ -107,9 +108,11 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
   removeAllVideo,
   chooseDevices,
   isInline=false,
-}) => (
-  <Container isInline={isInline} className={`tintbg ${isInline ? 'reactroom-media-send-btns-inline' : 'reactroom-media-send-btns'}`}>
-    <RequestUserMedia
+}) => {
+  const { audioMode, audioModeType } = useContext(AudioModes);
+  console.log('audioModeType', audioModeType)
+  return (<Container isInline={isInline} className={`tintbg ${isInline ? 'reactroom-media-send-btns-inline' : 'reactroom-media-send-btns'}`}>
+    {audioModeType == 'never' ? null : <RequestUserMedia
       audio={{
         deviceId: {
           ideal: localStorage.preferredAudioDeviceId
@@ -137,7 +140,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
           <span>{isMuted ? "Share Audio" : "Mute Audio"}</span>
         </AudioButton>
       )}
-    />
+    />}
     <RequestUserMedia
       video={{
         deviceId: {
@@ -145,11 +148,13 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
         }
       }}
       share={true}
-      render={getMedia => (
+      render={(getMedia, captureState) => (
         hasVideo ? null : <VideoButton
           isOff={isPaused}
           onClick={() => {
-            if (!hasVideo) {
+            if (captureState.requestingCapture) {
+              return;
+            } else if (!hasVideo) {
               getMedia({ video: true });
             } else if (isPaused) {
               resumeVideo();
@@ -177,7 +182,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
     </TalkyButton>
     }
   </Container>
-);
+)};
 
 function mapDispatchToProps(
   dispatch: any,
