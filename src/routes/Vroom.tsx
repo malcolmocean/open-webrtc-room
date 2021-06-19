@@ -8,6 +8,9 @@ import {
   Failed,
   Provider,
   RemoteAudioPlayer,
+  LocalMediaList,
+  RemoteMediaList,
+  UserControls,
   Room
 } from '@andyet/simplewebrtc';
 import React, { Component } from 'react';
@@ -16,6 +19,7 @@ import styled from 'styled-components';
 import PeerGrid from '../components/PeerGrid';
 import PeerRow from '../components/PeerRow';
 import Sidebar from '../components/Sidebar';
+import LocalMediaControls from '../components/LocalMediaControls';
 import HiddenPeers from '../contexts/HiddenPeers';
 import mq from '../styles/media-queries';
 
@@ -104,15 +108,81 @@ class Index extends Component<Props, State> {
               {({ room }) => {
                 return (
                   <Container>
-                    <Sidebar
-                      roomAddress={room.address!}
-                      activeSpeakerView={this.state.activeSpeakerView}
-                      toggleActiveSpeakerView={this.toggleActiveSpeakerView}
-                      pttMode={this.state.pttMode}
-                      togglePttMode={this.togglePttMode}
-                      roomId={room.id!}
-                      allowShareScreen={this.state.allowShareScreen}
-                      allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
+                    <LocalMediaList
+                      render={(localList) => (
+                        <RemoteMediaList
+                        render={(remoteList) => {
+                          if (!localList.media.length && !remoteList.media.length) {
+                            console.log("EMPTY LISTS")
+                            return <LocalMediaControls
+                              isInline={true}
+                              hasAudio={false}
+                              hasVideo={false}
+                              hasScreenCapture={false}
+                              isMuted={true}
+                              unmute={() => {}}
+                              mute={() => {}}
+                              isPaused={true}
+                              resumeVideo={() => {}}
+                              pauseVideo={() => {}}
+                              isSpeaking={false}
+                              isSpeakingWhileMuted={false}
+                              allowShareScreen={this.state.allowShareScreen}
+                              // chooseDevices={() => chooseDevices()}
+                            />
+                            // return <UserControls
+                            //   render={({
+                            //     hasAudio,
+                            //     hasVideo,
+                            //     hasScreenCapture,
+                            //     isMuted,
+                            //     mute,
+                            //     unmute,
+                            //     isPaused,
+                            //     isSpeaking,
+                            //     isSpeakingWhileMuted,
+                            //     pauseVideo,
+                            //     resumeVideo,
+                            //     user,
+                            //   }) => (
+                            //     <LocalMediaControls
+                            //       hasAudio={hasAudio}
+                            //       hasVideo={hasVideo}
+                            //       hasScreenCapture={hasScreenCapture}
+                            //       isMuted={isMuted}
+                            //       unmute={() => {
+                            //         unmute();
+                            //       }}
+                            //       mute={mute}
+                            //       isPaused={isPaused}
+                            //       resumeVideo={() => resumeVideo({ screenCapture: false })}
+                            //       pauseVideo={() => pauseVideo({ screenCapture: false })}
+                            //       isSpeaking={isSpeaking}
+                            //       isSpeakingWhileMuted={isSpeakingWhileMuted}
+                            //       allowShareScreen={this.state.allowShareScreen}
+                            //       // allowShareScreen={true}
+                            //     />
+                            //     // TODO = clean this up / make more programmatic
+                            //       // chooseDevices={() => chooseDevices()}
+                            //   )}
+                            // />
+
+                            // <LocalMediaControls>
+                            // <LocalMediaControlsOriginal
+                          }
+                          return <Sidebar
+                            roomAddress={room.address!}
+                            activeSpeakerView={this.state.activeSpeakerView}
+                            toggleActiveSpeakerView={this.toggleActiveSpeakerView}
+                            pttMode={this.state.pttMode}
+                            togglePttMode={this.togglePttMode}
+                            roomId={room.id!}
+                            allowShareScreen={this.state.allowShareScreen}
+                            allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
+                          />
+                        }}
+                        />
+                      )}
                     />
                     <Connected>
                       {room.joined ? (

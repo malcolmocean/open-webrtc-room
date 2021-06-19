@@ -46,7 +46,6 @@ const AudioButton = styled(TalkyButton)<MutePauseButtonProps>`
           animation: ${pulseKeyFrames} 0.5s ease-in-out infinite;
         `
       : ''}
-  margin-right: 5px;
 `;
   // }
 
@@ -59,23 +58,17 @@ const VideoButton = styled(TalkyButton)(({ isOff }: MutePauseButtonProps) => ({
 //   }
 // }));
 
-const Container = styled.div({
-  display: 'flex',
-  'flex-direction': 'column',
-  marginBottom: '10px',
-  // [mq.MOBILE]: {
-  //   '& button': {
-  //     flex: 1,
-  //     // border: '2px solid green',
-  //     '&:first-of-type': {
-  //       marginRight: '10px'
-  //     }
-  //   }
-  // },
-  [mq.SMALL_DESKTOP]: {
-    // justifyContent: 'space-between'
-  }
-});
+interface ContainerProps {
+  isInline: boolean;
+}
+
+const FlexContainer = styled.div`
+  display: flex;
+`
+
+const Container = styled(FlexContainer)<ContainerProps>`
+  flex-direction: ${props => props.isInline ? 'row' : 'column'};
+`;
 
 interface LocalMediaControlsProps {
   hasAudio: boolean;
@@ -93,6 +86,7 @@ interface LocalMediaControlsProps {
   removeAllAudio?: () => void;
   removeAllVideo?: () => void;
   chooseDevices?: () => void;
+  isInline?: boolean;
 }
 
 // LocalMediaControls displays buttons to toggle the mute/pause state of the
@@ -112,8 +106,9 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
   removeAllAudio,
   removeAllVideo,
   chooseDevices,
+  isInline=false,
 }) => (
-  <Container className='outliney-box tintbg self-video-send-btn self-video-send-btn2'>
+  <Container isInline={isInline} className={`tintbg ${isInline ? 'reactroom-media-send-btns-inline' : 'reactroom-media-send-btns'}`}>
     <RequestUserMedia
       audio={{
         deviceId: {
@@ -138,7 +133,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
             }
           }}
         >
-          {isMuted ? <MicOffIcon /> : <MicIcon />}
+          {hasAudio && isMuted ? <MicOffIcon /> : <MicIcon />}
           <span>{isMuted ? "Share Audio" : "Mute Audio"}</span>
         </AudioButton>
       )}
@@ -164,7 +159,8 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
             }
           }}
         >
-          {isPaused ? <VideocamOffIcon /> : <VideocamIcon />}
+          {/*{isPaused ? <VideocamOffIcon /> : <VideocamIcon />}*/}
+          <VideocamIcon />
           <span>{isPaused ? "Share Video" : "Stop Video"}</span>
         </VideoButton>
       )}
@@ -176,6 +172,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
       if (chooseDevices) chooseDevices();
     }}>
       <SettingsIcon />
+      &nbsp;
       Settings
     </TalkyButton>
   </Container>
