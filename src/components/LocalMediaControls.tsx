@@ -13,6 +13,8 @@ import mq from '../styles/media-queries';
 import ScreenshareControls from './ScreenshareControls';
 import { AudioModes } from '../contexts/AudioModes';
 
+const HIDE_SETTINGS_FOR_NOW = true
+
 interface MutePauseButtonProps {
   isFlashing?: boolean;
   isOff: boolean;
@@ -171,7 +173,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
       )}
     />
     {allowShareScreen && !hasScreenCapture ? <ScreenshareControls /> : null}
-    {!chooseDevices ? null :
+    {!chooseDevices || HIDE_SETTINGS_FOR_NOW ? null :
     <TalkyButton onClick={() => {
       if (removeAllAudio) removeAllAudio();
       if (removeAllVideo) removeAllVideo();

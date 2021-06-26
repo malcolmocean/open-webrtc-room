@@ -16,6 +16,7 @@ import HiddenPeers from '../contexts/HiddenPeers';
 import { TalkyButton } from '../styles/button';
 import FullScreen from './Fullscreen';
 import { default as MyVolumeMeter } from './VolumeMeter';
+import { AudioModes } from '../contexts/AudioModes';
 
 const Volume = styled.div({
   display: 'flex',
@@ -301,6 +302,7 @@ const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
   peer,
   toggleFullScreen,
 }) => {
+  const { audioMode, audioModeType } = useContext(AudioModes);
   const { hiddenPeers, togglePeer } = useContext(HiddenPeers);
   const isHidden = hiddenPeers.includes(peer.id)
   return (
@@ -345,22 +347,24 @@ const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
                 <VisibilityIcon fill="white" onClick={() => togglePeer(peer.id)} />
               </VisibilityButton>
             */}
-            <MuteButton
-              title={isMuted ? `Unmute ${peer.displayName}` : `Mute ${peer.displayName}`}
-              onClick={() => (isMuted ? unmute() : mute())}
-            >
-              {isMuted ? (
-                <>
-                  <VolumeOffIcon fill="white" />
-                  <span>Unmute</span>
-                </>
-              ) : (
-                <>
-                  <VolumeUpIcon fill="white" />
-                  <span>Mute</span>
-                </>
-              )}
-            </MuteButton>
+            {audioModeType == 'never' ? null :
+              <MuteButton
+                title={isMuted ? `Unmute ${peer.displayName}` : `Mute ${peer.displayName}`}
+                onClick={() => (isMuted ? unmute() : mute())}
+              >
+                {isMuted ? (
+                  <>
+                    <VolumeOffIcon fill="white" />
+                    <span>Unmute</span>
+                  </>
+                ) : (
+                  <>
+                    <VolumeUpIcon fill="white" />
+                    <span>Mute</span>
+                  </>
+                )}
+              </MuteButton>
+            }
             {/*<KickButton
               title="Kick participant from the call"
               onClick={() => {

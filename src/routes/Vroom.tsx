@@ -118,19 +118,21 @@ class Index extends Component<Props, State> {
   public render() {
     return (
       <Provider configUrl={this.props.configUrl} userData={this.props.userData}>
-        <RemoteAudioPlayer />
-        <HiddenPeers.Provider
+        <AudioModes.Provider
           value={{
-            hiddenPeers: this.state.hiddenPeers,
-            togglePeer: this.togglePeer
+            audioModeType: this.state.audioModeType,
+            audioMode: this.state.audioMode,
+            audioOffMessage: this.state.audioOffMessage,
+            setAudioMode: this.setAudioMode
           }}
         >
-          <AudioModes.Provider
+          {this.state.audioMode == 'off' ? null :
+            <RemoteAudioPlayer />
+          }
+          <HiddenPeers.Provider
             value={{
-              audioModeType: this.state.audioModeType,
-              audioMode: this.state.audioMode,
-              audioOffMessage: this.state.audioOffMessage,
-              setAudioMode: this.setAudioMode
+              hiddenPeers: this.state.hiddenPeers,
+              togglePeer: this.togglePeer
             }}
           >
             <RootContainer>
@@ -141,96 +143,95 @@ class Index extends Component<Props, State> {
                       render={(localList) => (
                         <RemoteMediaList
                         render={(remoteList) => {
-                          if (!localList.media.length && !remoteList.media.length) {
-                            return <LocalMediaControls
-                              isInline={true}
-                              hasAudio={false}
-                              hasVideo={false}
-                              hasScreenCapture={false}
-                              isMuted={true}
-                              unmute={() => {}}
-                              mute={() => {}}
-                              isPaused={true}
-                              resumeVideo={() => {}}
-                              pauseVideo={() => {}}
-                              isSpeaking={false}
-                              isSpeakingWhileMuted={false}
-                              allowShareScreen={this.state.allowShareScreen}
-                              // chooseDevices={() => chooseDevices()}
-                            />
-                          }
+                          const allMedia = localList.media.concat(remoteList.media)
+                          const allVideo = allMedia.filter(m => m.kind === 'video')
+                          const allCameras = allMedia.filter(m => !m.screenCapture)
+                          const allScreens = allMedia.filter(m => m.screenCapture)
+                          // TODO = use this to style differently depending on what's visible
                           return <>
-                            {this.state.audioModeType == 'never' ? null : (this.state.audioMode == 'off' ? <AudioOffBanner>{this.state.audioOffMessage}</AudioOffBanner> : null)}
-                            {/*
-                            {this.state.audioModeType == 'never' ? <UserControls
-                               render={({setGlobalVolumeLimit}) => {
-                                 console.log("setGlobalVolumeLimit(-Infinity)")
-                                 // setGlobalVolumeLimit(-Infinity)
-                                 // can't do this - causes recursive update loop
-                                 return null
-                               }}
-                               /> : null}
-                            */}
-                            <Sidebar
-                              roomAddress={room.address!}
-                              activeSpeakerView={this.state.activeSpeakerView}
-                              toggleActiveSpeakerView={this.toggleActiveSpeakerView}
-                              pttMode={this.state.pttMode}
-                              togglePttMode={this.togglePttMode}
-                              roomId={room.id!}
-                              allowShareScreen={this.state.allowShareScreen}
-                              allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
-                            />
+                            {localList.media.length || remoteList.media.length ? <>
+                              {this.state.audioModeType == 'never' ? null :
+                                (this.state.audioMode == 'off' ? <AudioOffBanner>
+                                  {this.state.audioOffMessage}
+                                </AudioOffBanner> : null)
+                              }
+                              <Sidebar
+                                roomAddress={room.address!}
+                                activeSpeakerView={this.state.activeSpeakerView}
+                                toggleActiveSpeakerView={this.toggleActiveSpeakerView}
+                                pttMode={this.state.pttMode}
+                                togglePttMode={this.togglePttMode}
+                                roomId={room.id!}
+                                allowShareScreen={this.state.allowShareScreen}
+                                allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
+                              />
+                            </> : <LocalMediaControls
+                                isInline={true}
+                                hasAudio={false}
+                                hasVideo={false}
+                                hasScreenCapture={false}
+                                isMuted={true}
+                                unmute={() => {}}
+                                mute={() => {}}
+                                isPaused={true}
+                                resumeVideo={() => {}}
+                                pauseVideo={() => {}}
+                                isSpeaking={false}
+                                isSpeakingWhileMuted={false}
+                                allowShareScreen={this.state.allowShareScreen}
+                                // chooseDevices={() => chooseDevices()}
+                              />
+                            }
+                            <Connected>
+                              {room.joined ? (
+                                <PeerRow
+                                  roomAddress={room.address!}
+                                  activeSpeakerView={this.state.activeSpeakerView}
+                                />
+                              ) : room.roomFull ? (
+                                <LoadingState>
+                                  <span className='reactroom-state reactroom-state-full'>This room is full.</span>
+                                </LoadingState>
+                              ) : room.roomNotStarted ? (
+                                <LoadingState>
+                                  <span className='reactroom-state reactroom-state-notstarted'>This room has not started yet.</span>
+                                </LoadingState>
+                              ) : room.banned ? (
+                                <LoadingState>
+                                  <span className='reactroom-state reactroom-state-notavailable'>This room is not available.</span>
+                                </LoadingState>
+                              ) : (
+                                <LoadingState>
+                                  <span className='reactroom-state reactroom-state-joining'>Joining room...</span>
+                                </LoadingState>
+                              )}
+                            </Connected>
+                            <Connecting>
+                              <LoadingState>
+                                <span className='reactroom-state reactroom-state-connecting'>Connecting...</span>
+                              </LoadingState>
+                            </Connecting>
+                            <Disconnected>
+                              <LoadingState>
+                                <span className='reactroom-state reactroom-state-lost'>Lost connection. Reattempting to join...</span>
+                              </LoadingState>
+                            </Disconnected>
+                            <Failed>
+                              <LoadingState>
+                                <span className='reactroom-state reactroom-state-failed'>Connection failed.</span>
+                              </LoadingState>
+                            </Failed>
                           </>
                         }}
                         />
                       )}
                     />
-                    <Connected>
-                      {room.joined ? (
-                        <PeerRow
-                          roomAddress={room.address!}
-                          activeSpeakerView={this.state.activeSpeakerView}
-                        />
-                      ) : room.roomFull ? (
-                        <LoadingState>
-                          <span className='reactroom-state reactroom-state-full'>This room is full.</span>
-                        </LoadingState>
-                      ) : room.roomNotStarted ? (
-                        <LoadingState>
-                          <span className='reactroom-state reactroom-state-notstarted'>This room has not started yet.</span>
-                        </LoadingState>
-                      ) : room.banned ? (
-                        <LoadingState>
-                          <span className='reactroom-state reactroom-state-notavailable'>This room is not available.</span>
-                        </LoadingState>
-                      ) : (
-                        <LoadingState>
-                          <span className='reactroom-state reactroom-state-joining'>Joining room...</span>
-                        </LoadingState>
-                      )}
-                    </Connected>
-                    <Connecting>
-                      <LoadingState>
-                        <span className='reactroom-state reactroom-state-connecting'>Connecting...</span>
-                      </LoadingState>
-                    </Connecting>
-                    <Disconnected>
-                      <LoadingState>
-                        <span className='reactroom-state reactroom-state-lost'>Lost connection. Reattempting to join...</span>
-                      </LoadingState>
-                    </Disconnected>
-                    <Failed>
-                      <LoadingState>
-                        <span className='reactroom-state reactroom-state-failed'>Connection failed.</span>
-                      </LoadingState>
-                    </Failed>
                   </Container>
                 )}
               </Room>
             </RootContainer>
-          </AudioModes.Provider>
-        </HiddenPeers.Provider>
+          </HiddenPeers.Provider>
+        </AudioModes.Provider>
       </Provider>
     );
   }

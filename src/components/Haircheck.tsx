@@ -9,8 +9,10 @@ import {
 import MicIcon from 'material-icons-svg/components/baseline/Mic';
 import VideocamIcon from 'material-icons-svg/components/baseline/Videocam';
 import VolumeUpIcon from 'material-icons-svg/components/baseline/VolumeUp';
-import React from 'react';
+import React, { useContext } from 'react';
 import styled, { css } from 'styled-components';
+
+import { AudioModes } from '../contexts/AudioModes';
 
 import Placeholders from '../contexts/Placeholders';
 import { TalkyButton } from '../styles/button';
@@ -200,6 +202,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
       <LocalMediaList
         screen={false}
         render={({ media, removeMedia, shareLocalMedia }) => {
+          const { audioMode, audioModeType } = useContext(AudioModes);
           const previewVideo = media.filter(m => m.id === this.state.previewVideoId)[0];
           const previewAudio = media.filter(m => m.id === this.state.previewAudioId)[0];
 
@@ -238,7 +241,8 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                         {this.initialAutoCapture(
                           microphonePermissionGranted,
                           cameraPermissionGranted,
-                          requestingCapture
+                          requestingCapture,
+                          audioModeType
                         )}
                         <div>
                           <UserControls
@@ -313,6 +317,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                             )}
                           </label>
                         </div>
+                        {audioModeType == 'never' ? null :                           
                         <div>
                           <label>
                             <span className="reactroom-left-icon">
@@ -375,6 +380,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                             </Volume>
                           )}
                         </div>
+                        }
                         <AcceptButtonContainer>
                           <button className="btn btn-default"
                             disabled={!this.state.showAccept || requestingCapture}
@@ -420,7 +426,8 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
   private initialAutoCapture(
     microphonePermissionGranted: boolean,
     cameraPermissionGranted: boolean,
-    requestingCapture?: boolean
+    requestingCapture?: boolean,
+    audioModeType?: 'never' | 'sometimes' | 'always',
   ) {
     const auto =
       this.state.allowInitialAutoCapture &&
@@ -443,7 +450,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
         share={false}
         auto={auto}
         audio={
-          microphonePermissionGranted
+          microphonePermissionGranted && audioModeType !== 'never'
             ? {
                 deviceId: { ideal: localStorage.preferredAudioDeviceId }
               }
