@@ -1,10 +1,11 @@
 import { RequestDisplayMedia } from '@andyet/simplewebrtc';
 import ShareScreenIcon from 'material-icons-svg/components/baseline/ScreenShare';
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { TalkyButton } from '../styles/button';
 import mq from '../styles/media-queries';
 import { deviceSupportsVolumeMonitoring } from '../utils/isMobile';
+import { AudioModes } from '../contexts/AudioModes';
 
 // not using this
 const HideOnTinyScreensButton = styled(TalkyButton)({
@@ -21,9 +22,10 @@ const EmptySpacer = styled.span({
 // ScreenshareControls displays a button that activates the screenshare flow.
 // It also provides a link to install the screenshare extension if it is
 // required by the user's browser.
-const ScreenshareControls: React.SFC = () => (
-  <RequestDisplayMedia
-    audio
+const ScreenshareControls: React.SFC = () => {
+  const { audioModeType } = useContext(AudioModes);
+  return <RequestDisplayMedia
+    audio={audioModeType !== 'never'}
     volumeMonitoring={deviceSupportsVolumeMonitoring()}
     render={(getDisplayMedia, sharing) => {
       if (!sharing.available) {
@@ -38,6 +40,7 @@ const ScreenshareControls: React.SFC = () => (
       );
     }}
   />
-);
+
+};
 
 export default ScreenshareControls;

@@ -65,8 +65,5 @@ class App extends Component<Props> {
     );
   }
 }
-        // <style>
-        //   ""
-        // </style>
 
 export default App;

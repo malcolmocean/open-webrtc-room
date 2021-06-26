@@ -388,7 +388,8 @@ interface PeerGridItemProps {
   onlyVisible: boolean;
 }
 
-// PeerGridItem renders various controls over a peer's media.
+// PeerGridItem renders various controls over a peer's media
+// currently not using onlyVisible
 const PeerGridItem: React.SFC<PeerGridItemProps> = ({ peer, media, onlyVisible }) => {
   if (!media.length) {return <span />}
   return <>
