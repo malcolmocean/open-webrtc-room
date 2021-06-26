@@ -112,7 +112,6 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
   isInline=false,
 }) => {
   const { audioMode, audioModeType } = useContext(AudioModes);
-  console.log('audioModeType', audioModeType)
   return (<Container isInline={isInline} className={`tintbg ${isInline ? 'reactroom-media-send-btns-inline' : 'reactroom-media-send-btns'}`}>
     {audioModeType == 'never' ? null : <RequestUserMedia
       audio={{

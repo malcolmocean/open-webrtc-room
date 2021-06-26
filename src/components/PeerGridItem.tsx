@@ -18,12 +18,17 @@ import FullScreen from './Fullscreen';
 import { default as MyVolumeMeter } from './VolumeMeter';
 import { AudioModes } from '../contexts/AudioModes';
 
+
 const Volume = styled.div({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignContent: 'middle'
 });
+
+const ScreenVideo = styled(Video)({
+  marginBottom: '-26.5px',
+})
 
 const OverlayButton = styled(TalkyButton)({
   display: 'inline-block',
@@ -140,11 +145,56 @@ class VideoPlaceholder extends React.Component<PlaceholderProps> {
   }
 }
 
+interface WrapperProps {
+  type: 'camera' | 'screen';
+  media: any;
+  qualityProfile?: 'low' | 'high';
+}
+
+class VideoWrapper1 extends React.Component<WrapperProps> {
+  constructor(props: WrapperProps) {
+    super(props);
+  }
+  public render() {
+    const height = this.props.type == 'camera' ? '135px' : '101px';
+    const qualityProfile = this.props.qualityProfile || 'low'
+    const Wrapper = styled.div({
+      '& video': {
+        height: height
+      }
+    })
+    return <Wrapper><Video media={this.props.media} qualityProfile={qualityProfile} /></Wrapper>
+  }
+}
+// this VideoWrapper component (either version) fixes the vertical offset bug
+// (I THINK!)
+// but triggers infinite loop of updates for some reason ¯\_(ツ)_/¯
+
+const VideoWrapper: React.SFC<WrapperProps> = (props) => {
+  const height = props.type == 'camera' ? '135px' : '101px';
+  const qualityProfile = props.qualityProfile || 'low'
+  const Wrapper = styled.div({
+    '& video': {
+      height: height
+    }
+  })
+  return <Wrapper><Video media={props.media} qualityProfile={qualityProfile} /></Wrapper>
+}
+
+const ScreenWrapperSimple = styled.div({
+  height: '101px',
+  '& video': {
+    height: '101px',
+    marginBottom: '-27px',
+  }
+})
+
 const UserBox = styled.div.attrs(props => ({
   className: 'reactroom-user-box',
 }))({
   display: 'inline-block',
   width: '180px',
+  height: '236px',
   '& .reactroom-user-box-buttons': {
     display: 'none',
   },
@@ -182,7 +232,7 @@ const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, peer, ful
     if (webcamStreams.length && !screenStreams.length) {
       return (
         <>
-          <Video media={webcamStreams[0]} qualityProfile='low' />
+          <Video media={webcamStreams[0]} />
           <VideoPlaceholder type='screen' />
         </>
       );
@@ -192,15 +242,23 @@ const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, peer, ful
       return (
         <>
           <VideoPlaceholder type='camera' name={peer.displayName} />
+          {/*<VideoWrapper type='screen' media={screenStreams[0]} />*/}
+          {/*<Video media={screenStreams[0]} qualityProfile='low' />*/}
+          <ScreenWrapperSimple>
           <Video media={screenStreams[0]} qualityProfile='low' />
+          </ScreenWrapperSimple>
         </>
       );
     }
 
     return (
       <>
+        {/*<VideoWrapper type='camera' media={webcamStreams[0]} />*/}
         <Video media={webcamStreams[0]} qualityProfile='low' />
+        {/*<VideoWrapper type='screen' media={screenStreams[0]} />*/}
+        <ScreenWrapperSimple>
         <Video media={screenStreams[0]} qualityProfile='low' />
+        </ScreenWrapperSimple>
       </>
     );
   }
