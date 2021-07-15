@@ -109,15 +109,7 @@ function setUserName(name: string) {
 }
 
 function setLowRes() {
-  console.log("no setLowRes - set hi res")
-
-  // const tiersHigh = [
-  //   [1, {width: 1920, height: 1080, frameRate: 60 }],
-  //   // [2, {width: 20, height: 15, frameRate: 10 }] // demo tiny
-  // ] as VideoResolutionTier[]
-  // dispatchAny(Actions.setVideoResolutionTiers(tiersHigh))
-
-  // return
+  console.log("~ ~ ~ setLowRes")
   // FYI: it counts everyone as a peer, not just people on video
   const tiers = [
     [1, {width: 180, height: 135, frameRate: 20 }],
@@ -126,8 +118,19 @@ function setLowRes() {
   dispatchAny(Actions.setVideoResolutionTiers(tiers))
 }
 
+function setHighRes() {
+  console.log("~ ~ ~ setHighRes")
+  const tiers = [
+    [1, {width: 1920, height: 1080, frameRate: 60 }],
+  ] as VideoResolutionTier[]
+  dispatchAny(Actions.setVideoResolutionTiers(tiers))
+}
+
+
 export default {
   run,
   loadTemplate,
   setUserName,
+  setHighRes,
+  setLowRes,
 };
