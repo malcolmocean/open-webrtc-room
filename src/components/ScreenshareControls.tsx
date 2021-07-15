@@ -1,3 +1,5 @@
+// this file no longer used
+// the code was copied into LocalMediaControls for simplicity
 import { RequestDisplayMedia } from '@andyet/simplewebrtc';
 import ShareScreenIcon from 'material-icons-svg/components/baseline/ScreenShare';
 import React, { useContext } from 'react';

@@ -300,6 +300,7 @@ const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, peer, ful
       </>
     )
     /* <AudioOnlyPeer /> is superceded by the above; file can probably be deleted */
+    // although I guess maybe it should still exist for rooms that have video disabled altogether
   }
   return <span />
 };

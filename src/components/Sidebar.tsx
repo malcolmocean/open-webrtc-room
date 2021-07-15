@@ -6,25 +6,24 @@ import Roster from './Roster';
 import SidebarUserControls from './SidebarUserControls';
 import Haircheck from './Haircheck';
 
-// const Container = styled.div`
-//   position: relative;
-//   padding: 10px;
-//   ${mq.MOBILE} {
-//     position: absolute;
-//     z-index: 200;
-//     top: 0;
-//     width: 185px;
-//   }
-//   ${mq.SMALL_DESKTOP} {
-//     width: 220px;
-//     border-right: ${({ theme }) => css`1px solid ${colorToString(theme.border)}`};
-//   }
-// `;
+const UserBoxSelf = styled.div.attrs(props => ({
+  className: 'reactroom-user-box reactroom-user-box-self',
+}))({
+  display: 'inline-block',
+  width: '180px',
+  height: '236px',
+  // '& .reactroom-user-box-buttons': {
+  //   display: 'none',
+  // },
+  // '&:hover .reactroom-user-box-buttons': {
+  //   display: 'block',
+  // }
+})
 
 interface Props {
   roomAddress: string;
   activeSpeakerView: boolean;
-  toggleActiveSpeakerView: () => void;
+  // toggleActiveSpeakerView: () => void;
   pttMode: boolean;
   togglePttMode: (e: React.SyntheticEvent) => void;
   roomId: string;
@@ -50,7 +49,7 @@ export default class Sidebar extends Component<Props, State> {
     const {
       roomAddress,
       activeSpeakerView,
-      toggleActiveSpeakerView,
+      // toggleActiveSpeakerView,
       pttMode,
       togglePttMode,
       roomId,
@@ -59,7 +58,7 @@ export default class Sidebar extends Component<Props, State> {
     } = this.props;
 
     return (
-      <div style={{clear: 'both'}}>
+      <UserBoxSelf>
       {this.state.inHaircheckMode ? (
         <Haircheck
           onAccept={() => {
@@ -69,7 +68,7 @@ export default class Sidebar extends Component<Props, State> {
         <div className='reactroom-ownvideo'>
           <SidebarUserControls
             activeSpeakerView={activeSpeakerView}
-            toggleActiveSpeakerView={toggleActiveSpeakerView}
+            // toggleActiveSpeakerView={toggleActiveSpeakerView}
             pttMode={pttMode}
             togglePttMode={togglePttMode}
             allowShareScreen={allowShareScreen}
@@ -78,7 +77,7 @@ export default class Sidebar extends Component<Props, State> {
           />
         </div>
         )}
-      </div>
+      </UserBoxSelf>
     );
   }
 

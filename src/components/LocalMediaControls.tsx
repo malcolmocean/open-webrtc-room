@@ -1,4 +1,4 @@
-import { RequestUserMedia, Actions } from '@andyet/simplewebrtc';
+import { RequestUserMedia, RequestDisplayMedia, Actions } from '@andyet/simplewebrtc';
 import { connect } from 'react-redux';
 
 import SettingsIcon from 'material-icons-svg/components/baseline/Settings';
@@ -6,60 +6,31 @@ import MicIcon from 'material-icons-svg/components/baseline/Mic';
 import MicOffIcon from 'material-icons-svg/components/baseline/MicOff';
 import VideocamIcon from 'material-icons-svg/components/baseline/Videocam';
 import VideocamOffIcon from 'material-icons-svg/components/baseline/VideocamOff';
+import ShareScreenIcon from 'material-icons-svg/components/baseline/ScreenShare';
 import React, { useContext } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { TalkyButton } from '../styles/button';
 import mq from '../styles/media-queries';
 import ScreenshareControls from './ScreenshareControls';
+import { deviceSupportsVolumeMonitoring } from '../utils/isMobile';
 import { AudioModes } from '../contexts/AudioModes';
 
 const HIDE_SETTINGS_FOR_NOW = true
 
 interface MutePauseButtonProps {
-  isFlashing?: boolean;
   isOff: boolean;
+  height?: string;
 }
 
-const pulseKeyFrames = keyframes`
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: .25;
-  }
-  100% {
-    opacity: 1;
-  }
-`;
-
-  // background-color: ${props => (props.isOff ? '#e60045' : '')};
-  // &:not(:hover) svg {
-  //   fill: ${props => (props.isOff ? 'white' : '')};
-  // }
-  // &:hover svg {
-  //   fill: '';
-  // }
 const AudioButton = styled(TalkyButton)<MutePauseButtonProps>`
   ${props =>
     !props.isOff ? css`font-weight: bold;` : ''
   }
-  ${props =>
-    props.isFlashing
-      ? css`
-          animation: ${pulseKeyFrames} 0.5s ease-in-out infinite;
-        `
-      : ''}
 `;
-  // }
 
-const VideoButton = styled(TalkyButton)(({ isOff }: MutePauseButtonProps) => ({
+const VideoButton = styled(TalkyButton)(({ isOff, height }: MutePauseButtonProps) => ({
+  height: height,
 }))
-// const VideoButton = styled(TalkyButton)(({ isOff }: MutePauseButtonProps) => ({
-//   backgroundColor: isOff ? '#e60045' : '',
-//   '& svg': {
-//     fill: isOff ? 'white' : ''
-//   }
-// }));
 
 interface ContainerProps {
   isInline: boolean;
@@ -112,7 +83,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
   isInline=false,
 }) => {
   const { audioMode, audioModeType } = useContext(AudioModes);
-  return (<Container isInline={isInline} className={`tintbg ${isInline ? 'reactroom-media-send-btns-inline' : 'reactroom-media-send-btns'}`}>
+  return (hasVideo && hasScreenCapture ? null : <Container isInline={isInline} className={`tintbg ${isInline ? 'reactroom-media-send-btns-inline' : 'reactroom-media-send-btns'}`}>
     {audioModeType == 'never' ? null : <RequestUserMedia
       audio={{
         deviceId: {
@@ -123,7 +94,6 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
       render={(getMedia, captureState) => (
         <AudioButton
           isOff={isMuted}
-          isFlashing={isSpeakingWhileMuted}
           onClick={() => {
             if (captureState.requestingCapture) {
               return;
@@ -171,7 +141,22 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
         </VideoButton>
       )}
     />
-    {allowShareScreen && !hasScreenCapture ? <ScreenshareControls /> : null}
+    {!allowShareScreen || hasScreenCapture ? null : <RequestDisplayMedia
+      audio={audioModeType !== 'never'}
+      volumeMonitoring={deviceSupportsVolumeMonitoring()}
+      render={(getDisplayMedia, sharing) => {
+        if (!sharing.available) {
+          return <div>(no screensharing available)</div>
+        }
+
+        return (
+          <TalkyButton title="Screen Share" onClick={getDisplayMedia}>
+            <ShareScreenIcon fill="#505658" />
+            <span>Share Screen</span>
+          </TalkyButton>
+        );
+      }}
+    />}
     {!chooseDevices || HIDE_SETTINGS_FOR_NOW ? null :
     <TalkyButton onClick={() => {
       if (removeAllAudio) removeAllAudio();

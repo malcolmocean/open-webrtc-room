@@ -149,22 +149,23 @@ class Index extends Component<Props, State> {
                           const allScreens = allMedia.filter(m => m.screenCapture)
                           // TODO = use this to style differently depending on what's visible
                           return <>
-                            {localList.media.length || remoteList.media.length ? <>
+                            {allMedia.length ? <>
                               {this.state.audioModeType == 'never' ? null :
                                 (this.state.audioMode == 'off' ? <AudioOffBanner>
                                   {this.state.audioOffMessage}
                                 </AudioOffBanner> : null)
+                              // removed from here so it could be part of PeerRow flow
+                              // <Sidebar
+                              //   roomAddress={room.address!}
+                              //   activeSpeakerView={this.state.activeSpeakerView}
+                              //   // toggleActiveSpeakerView={this.toggleActiveSpeakerView}
+                              //   pttMode={this.state.pttMode}
+                              //   togglePttMode={this.togglePttMode}
+                              //   roomId={room.id!}
+                              //   allowShareScreen={this.state.allowShareScreen}
+                              //   allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
+                              // />
                               }
-                              <Sidebar
-                                roomAddress={room.address!}
-                                activeSpeakerView={this.state.activeSpeakerView}
-                                toggleActiveSpeakerView={this.toggleActiveSpeakerView}
-                                pttMode={this.state.pttMode}
-                                togglePttMode={this.togglePttMode}
-                                roomId={room.id!}
-                                allowShareScreen={this.state.allowShareScreen}
-                                allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
-                              />
                             </> : <LocalMediaControls
                                 isInline={true}
                                 hasAudio={false}
@@ -187,6 +188,14 @@ class Index extends Component<Props, State> {
                                 <PeerRow
                                   roomAddress={room.address!}
                                   activeSpeakerView={this.state.activeSpeakerView}
+                                  pttMode={this.state.pttMode}
+                                  togglePttMode={this.togglePttMode}
+                                  roomId={room.id!}
+                                  allowShareScreen={this.state.allowShareScreen}
+                                  allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
+                                  hasAnyMedia={Boolean(allMedia.length)}
+                                  // hasAnyCameras={Boolean(allCameras.length)}
+                                  // hasAnyScreens={Boolean(allScreens.length)}
                                 />
                               ) : room.roomFull ? (
                                 <LoadingState>

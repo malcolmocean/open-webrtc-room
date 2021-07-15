@@ -71,7 +71,7 @@ const ToggleContainer = styled.label({
 
 interface Props {
   activeSpeakerView: boolean;
-  toggleActiveSpeakerView: () => void;
+  // toggleActiveSpeakerView: () => void;
   pttMode: boolean;
   togglePttMode: (e: React.SyntheticEvent<Element>) => void;
   allowShareScreen: boolean;
@@ -124,7 +124,7 @@ const LocalMediaView: React.SFC<LocalMediaProps> = ({ media }) => (
 
 const SidebarUserControls: React.SFC<Props> = ({
   activeSpeakerView,
-  toggleActiveSpeakerView,
+  // toggleActiveSpeakerView,
   pttMode,
   togglePttMode,
   allowShareScreen,
