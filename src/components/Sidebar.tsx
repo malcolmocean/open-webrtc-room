@@ -67,7 +67,7 @@ export default class Sidebar extends Component<Props, State> {
         /> ) : (
         <div className='reactroom-ownvideo'>
           <SidebarUserControls
-            activeSpeakerView={activeSpeakerView}
+            // activeSpeakerView={activeSpeakerView}
             // toggleActiveSpeakerView={toggleActiveSpeakerView}
             pttMode={pttMode}
             togglePttMode={togglePttMode}

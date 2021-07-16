@@ -2,7 +2,7 @@ import {Peer, PeerList, RemoteMediaList } from '@andyet/simplewebrtc';
 import React from 'react';
 import styled from 'styled-components';
 import PeerGridItem from './PeerGridItem';
-import Sidebar from '../components/Sidebar';
+import SelfGridItem from './SelfGridItem';
 
 const StyledRowLayout = styled.div/*.attrs(props => ({
   className: 'reactroom-row-layout',
@@ -42,9 +42,9 @@ const PeerRow: React.SFC<Props> = ({
       room={roomAddress}
       render={({ peers }) => {
         return <StyledRowLayout>
-          {hasAnyMedia ? <Sidebar
+          {hasAnyMedia ? <SelfGridItem
             roomAddress={roomAddress}
-            activeSpeakerView={activeSpeakerView}
+            // activeSpeakerView={activeSpeakerView}
             // toggleActiveSpeakerView={this.toggleActiveSpeakerView}
             pttMode={pttMode}
             togglePttMode={togglePttMode}

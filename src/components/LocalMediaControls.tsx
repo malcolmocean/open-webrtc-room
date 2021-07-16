@@ -11,7 +11,6 @@ import React, { useContext } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { TalkyButton } from '../styles/button';
 import mq from '../styles/media-queries';
-import ScreenshareControls from './ScreenshareControls';
 import { deviceSupportsVolumeMonitoring } from '../utils/isMobile';
 import { AudioModes } from '../contexts/AudioModes';
 
