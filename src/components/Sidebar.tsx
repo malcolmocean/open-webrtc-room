@@ -4,7 +4,6 @@ import mq from '../styles/media-queries';
 import { colorToString } from '../utils/colorify';
 import Roster from './Roster';
 import SidebarUserControls from './SidebarUserControls';
-import Haircheck from './Haircheck';
 
 const UserBoxSelf = styled.div.attrs(props => ({
   className: 'reactroom-user-box reactroom-user-box-self',
@@ -32,7 +31,7 @@ interface Props {
 }
 
 interface State {
-  inHaircheckMode: boolean;
+  // inHaircheckMode: boolean;
   // showPasswordModal: boolean;
 }
 
@@ -40,7 +39,6 @@ export default class Sidebar extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      inHaircheckMode: false
     };
     // this.state = { showPasswordModal: false };
   }
@@ -59,12 +57,6 @@ export default class Sidebar extends Component<Props, State> {
 
     return (
       <UserBoxSelf>
-      {this.state.inHaircheckMode ? (
-        <Haircheck
-          onAccept={() => {
-            this.setState({ inHaircheckMode: false });
-          }}
-        /> ) : (
         <div className='reactroom-ownvideo'>
           <SidebarUserControls
             // activeSpeakerView={activeSpeakerView}
@@ -73,15 +65,9 @@ export default class Sidebar extends Component<Props, State> {
             togglePttMode={togglePttMode}
             allowShareScreen={allowShareScreen}
             allowWalkieTalkieMode={allowWalkieTalkieMode}
-            chooseDevices={() => this.chooseDevices()}
           />
         </div>
-        )}
       </UserBoxSelf>
     );
-  }
-
-  private chooseDevices() {
-    this.setState({ inHaircheckMode: true });
   }
 }

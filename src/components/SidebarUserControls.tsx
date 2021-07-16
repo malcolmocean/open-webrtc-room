@@ -76,7 +76,6 @@ interface Props {
   togglePttMode: (e: React.SyntheticEvent<Element>) => void;
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
-  chooseDevices: () => void;
 }
 
 interface LocalMediaProps {
@@ -129,7 +128,6 @@ const SidebarUserControls: React.SFC<Props> = ({
   togglePttMode,
   allowShareScreen,
   allowWalkieTalkieMode,
-  chooseDevices,
 }) => (
   <UserControls
     render={({
@@ -205,7 +203,6 @@ const SidebarUserControls: React.SFC<Props> = ({
           isSpeaking={isSpeaking}
           isSpeakingWhileMuted={isSpeakingWhileMuted}
           allowShareScreen={allowShareScreen}
-          chooseDevices={() => chooseDevices()}
         />
         <RoomModeToggles>
           {allowWalkieTalkieMode && (

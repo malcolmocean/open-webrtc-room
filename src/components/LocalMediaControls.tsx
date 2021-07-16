@@ -13,6 +13,7 @@ import { TalkyButton } from '../styles/button';
 import mq from '../styles/media-queries';
 import { deviceSupportsVolumeMonitoring } from '../utils/isMobile';
 import { AudioModes } from '../contexts/AudioModes';
+import ChooseDevices from '../contexts/ChooseDevices';
 
 const HIDE_SETTINGS_FOR_NOW = true
 
@@ -58,7 +59,6 @@ interface LocalMediaControlsProps {
   allowShareScreen: boolean;
   removeAllAudio?: () => void;
   removeAllVideo?: () => void;
-  chooseDevices?: () => void;
   isInline?: boolean;
 }
 
@@ -78,10 +78,10 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
   allowShareScreen,
   removeAllAudio,
   removeAllVideo,
-  chooseDevices,
   isInline=false,
 }) => {
-  const { audioMode, audioModeType } = useContext(AudioModes);
+  const { audioMode, audioModeType } = useContext(AudioModes)
+  const { chooseDevices } = useContext(ChooseDevices)
   return (hasVideo && hasScreenCapture ? null : <Container isInline={isInline} className={`tintbg ${isInline ? 'reactroom-media-send-btns-inline' : 'reactroom-media-send-btns'}`}>
     {audioModeType == 'never' ? null : <RequestUserMedia
       audio={{
@@ -156,16 +156,14 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
         );
       }}
     />}
-    {!chooseDevices || HIDE_SETTINGS_FOR_NOW ? null :
     <TalkyButton onClick={() => {
       if (removeAllAudio) removeAllAudio();
       if (removeAllVideo) removeAllVideo();
-      chooseDevices();
+      chooseDevices(true);
     }}>
       <SettingsIcon />
       <span>Settings</span>
     </TalkyButton>
-    }
   </Container>
 )};
 

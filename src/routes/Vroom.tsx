@@ -16,12 +16,14 @@ import {
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import PeerGrid from '../components/PeerGrid';
 import PeerRow from '../components/PeerRow';
-import Sidebar from '../components/Sidebar';
+// import PeerGrid from '../components/PeerGrid';
+// import Sidebar from '../components/Sidebar';
+import Haircheck from '../components/Haircheck';
 import LocalMediaControls from '../components/LocalMediaControls';
 import HiddenPeers from '../contexts/HiddenPeers';
 import { AudioModes } from '../contexts/AudioModes';
+import ChooseDevices from '../contexts/ChooseDevices';
 import mq from '../styles/media-queries';
 
 const RootContainer = styled.div({
@@ -59,6 +61,10 @@ const AudioOffBanner = styled.div({
   height: 'auto',
 })
 
+const ClearFix = styled.div({
+  clear: 'both'
+})
+
 interface RoomConfig {
   openToPublic: boolean;
   allowShareScreen: boolean;
@@ -80,7 +86,6 @@ interface State {
   activeSpeakerView: boolean;
   pttMode: boolean;
   sendRtt: boolean;
-  chatOpen: boolean;
   hiddenPeers: string[];
   openToPublic: boolean;
   allowShareScreen: boolean;
@@ -88,6 +93,7 @@ interface State {
   audioModeType: 'always' | 'sometimes' | 'never';
   audioMode: 'on' | 'off';
   audioOffMessage: string;
+  showHaircheck: boolean;
 }
 
 class Index extends Component<Props, State> {
@@ -104,11 +110,11 @@ class Index extends Component<Props, State> {
       activeSpeakerView: false,
       pttMode: false,
       sendRtt: false,
-      chatOpen: true,
       hiddenPeers: [],
       audioModeType,
       audioOffMessage,
       audioMode: 'off',
+      showHaircheck: false,
       openToPublic,
       allowShareScreen,
       allowWalkieTalkieMode,
@@ -135,110 +141,124 @@ class Index extends Component<Props, State> {
               togglePeer: this.togglePeer
             }}
           >
-            <RootContainer>
-              <Room name={this.props.name}>
-                {({ room }) => (
-                  <Container>
-                    <LocalMediaList
-                      render={(localList) => (
-                        <RemoteMediaList
-                        render={(remoteList) => {
-                          const allMedia = localList.media.concat(remoteList.media)
-                          const allVideo = allMedia.filter(m => m.kind === 'video')
-                          const allCameras = allMedia.filter(m => !m.screenCapture)
-                          const allScreens = allMedia.filter(m => m.screenCapture)
-                          // TODO = use this to style differently depending on what's visible
-                          return <>
-                            {allMedia.length ? <>
-                              {this.state.audioModeType == 'never' ? null :
-                                (this.state.audioMode == 'off' ? <AudioOffBanner>
-                                  {this.state.audioOffMessage}
-                                </AudioOffBanner> : null)
-                              // removed from here so it could be part of PeerRow flow
-                              // <Sidebar
-                              //   roomAddress={room.address!}
-                              //   activeSpeakerView={this.state.activeSpeakerView}
-                              //   // toggleActiveSpeakerView={this.toggleActiveSpeakerView}
-                              //   pttMode={this.state.pttMode}
-                              //   togglePttMode={this.togglePttMode}
-                              //   roomId={room.id!}
-                              //   allowShareScreen={this.state.allowShareScreen}
-                              //   allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
-                              // />
-                              }
-                            </> : <LocalMediaControls
-                                isInline={true}
-                                hasAudio={false}
-                                hasVideo={false}
-                                hasScreenCapture={false}
-                                isMuted={true}
-                                unmute={() => {}}
-                                mute={() => {}}
-                                isPaused={true}
-                                resumeVideo={() => {}}
-                                pauseVideo={() => {}}
-                                isSpeaking={false}
-                                isSpeakingWhileMuted={false}
-                                allowShareScreen={this.state.allowShareScreen}
-                                // chooseDevices={() => chooseDevices()}
-                              />
-                            }
-                            <Connected>
-                              {room.joined ? (
-                                <PeerRow
-                                  roomAddress={room.address!}
-                                  activeSpeakerView={this.state.activeSpeakerView}
-                                  pttMode={this.state.pttMode}
-                                  togglePttMode={this.togglePttMode}
-                                  roomId={room.id!}
+            <ChooseDevices.Provider
+              value={{
+                showHaircheck: this.state.showHaircheck,
+                chooseDevices: this.chooseDevices,
+              }}
+            >
+              <RootContainer>
+                <Room name={this.props.name}>
+                  {({ room }) => (<>
+                    {this.state.showHaircheck ? <Haircheck
+                      audioModeType={this.state.audioModeType}
+                      audioMode={this.state.audioMode}
+                      onAccept={() => {
+                        this.setState({ showHaircheck: false });
+                      }}
+                    /> : null}
+                    {/*<ClearFix />*/}
+                    <Container>
+                      <LocalMediaList
+                        render={(localList) => (
+                          <RemoteMediaList
+                          render={(remoteList) => {
+                            const allMedia = localList.media.concat(remoteList.media)
+                            const allVideo = allMedia.filter(m => m.kind === 'video')
+                            const allCameras = allMedia.filter(m => !m.screenCapture)
+                            const allScreens = allMedia.filter(m => m.screenCapture)
+                            // TODO = use this to style differently depending on what's visible
+                            return <>
+                              {allMedia.length ? <>
+                                {this.state.audioModeType == 'never' ? null :
+                                  (this.state.audioMode == 'off' ? <AudioOffBanner>
+                                    {this.state.audioOffMessage}
+                                  </AudioOffBanner> : null)
+                                // removed from here so it could be part of PeerRow flow
+                                // <Sidebar
+                                //   roomAddress={room.address!}
+                                //   activeSpeakerView={this.state.activeSpeakerView}
+                                //   // toggleActiveSpeakerView={this.toggleActiveSpeakerView}
+                                //   pttMode={this.state.pttMode}
+                                //   togglePttMode={this.togglePttMode}
+                                //   roomId={room.id!}
+                                //   allowShareScreen={this.state.allowShareScreen}
+                                //   allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
+                                // />
+                                }
+                              </> : <LocalMediaControls
+                                  isInline={true}
+                                  hasAudio={false}
+                                  hasVideo={false}
+                                  hasScreenCapture={false}
+                                  isMuted={true}
+                                  unmute={() => {}}
+                                  mute={() => {}}
+                                  isPaused={true}
+                                  resumeVideo={() => {}}
+                                  pauseVideo={() => {}}
+                                  isSpeaking={false}
+                                  isSpeakingWhileMuted={false}
                                   allowShareScreen={this.state.allowShareScreen}
-                                  allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
-                                  hasAnyMedia={Boolean(allMedia.length)}
-                                  // hasAnyCameras={Boolean(allCameras.length)}
-                                  // hasAnyScreens={Boolean(allScreens.length)}
                                 />
-                              ) : room.roomFull ? (
+                              }
+                              <Connected>
+                                {room.joined ? (
+                                  <PeerRow
+                                    roomAddress={room.address!}
+                                    activeSpeakerView={this.state.activeSpeakerView}
+                                    pttMode={this.state.pttMode}
+                                    togglePttMode={this.togglePttMode}
+                                    roomId={room.id!}
+                                    allowShareScreen={this.state.allowShareScreen}
+                                    allowWalkieTalkieMode={this.state.allowWalkieTalkieMode}
+                                    hasAnyMedia={Boolean(allMedia.length)}
+                                    // hasAnyCameras={Boolean(allCameras.length)}
+                                    // hasAnyScreens={Boolean(allScreens.length)}
+                                  />
+                                ) : room.roomFull ? (
+                                  <LoadingState>
+                                    <span className='reactroom-state reactroom-state-full'>This room is full.</span>
+                                  </LoadingState>
+                                ) : room.roomNotStarted ? (
+                                  <LoadingState>
+                                    <span className='reactroom-state reactroom-state-notstarted'>This room has not started yet.</span>
+                                  </LoadingState>
+                                ) : room.banned ? (
+                                  <LoadingState>
+                                    <span className='reactroom-state reactroom-state-notavailable'>This room is not available.</span>
+                                  </LoadingState>
+                                ) : (
+                                  <LoadingState>
+                                    <span className='reactroom-state reactroom-state-joining'>Joining room...</span>
+                                  </LoadingState>
+                                )}
+                              </Connected>
+                              <Connecting>
                                 <LoadingState>
-                                  <span className='reactroom-state reactroom-state-full'>This room is full.</span>
+                                  <span className='reactroom-state reactroom-state-connecting'>Connecting...</span>
                                 </LoadingState>
-                              ) : room.roomNotStarted ? (
+                              </Connecting>
+                              <Disconnected>
                                 <LoadingState>
-                                  <span className='reactroom-state reactroom-state-notstarted'>This room has not started yet.</span>
+                                  <span className='reactroom-state reactroom-state-lost'>Lost connection. Reattempting to join...</span>
                                 </LoadingState>
-                              ) : room.banned ? (
+                              </Disconnected>
+                              <Failed>
                                 <LoadingState>
-                                  <span className='reactroom-state reactroom-state-notavailable'>This room is not available.</span>
+                                  <span className='reactroom-state reactroom-state-failed'>Connection failed.</span>
                                 </LoadingState>
-                              ) : (
-                                <LoadingState>
-                                  <span className='reactroom-state reactroom-state-joining'>Joining room...</span>
-                                </LoadingState>
-                              )}
-                            </Connected>
-                            <Connecting>
-                              <LoadingState>
-                                <span className='reactroom-state reactroom-state-connecting'>Connecting...</span>
-                              </LoadingState>
-                            </Connecting>
-                            <Disconnected>
-                              <LoadingState>
-                                <span className='reactroom-state reactroom-state-lost'>Lost connection. Reattempting to join...</span>
-                              </LoadingState>
-                            </Disconnected>
-                            <Failed>
-                              <LoadingState>
-                                <span className='reactroom-state reactroom-state-failed'>Connection failed.</span>
-                              </LoadingState>
-                            </Failed>
-                          </>
-                        }}
-                        />
-                      )}
-                    />
-                  </Container>
-                )}
-              </Room>
-            </RootContainer>
+                              </Failed>
+                            </>
+                          }}
+                          />
+                        )}
+                      />
+                    </Container>
+                  </>)}
+                </Room>
+              </RootContainer>
+            </ChooseDevices.Provider>
           </HiddenPeers.Provider>
         </AudioModes.Provider>
       </Provider>
@@ -281,10 +301,6 @@ class Index extends Component<Props, State> {
     }
   };
 
-  private toggleChat = () => {
-    this.setState({ chatOpen: !this.state.chatOpen });
-  };
-
   private togglePeer = (peerId: string) => {
     if (this.state.hiddenPeers.includes(peerId)) {
       const hiddenPeers = [...this.state.hiddenPeers];
@@ -298,6 +314,11 @@ class Index extends Component<Props, State> {
 
   private setAudioMode = (mode: 'on' | 'off') => {
     this.setState({audioMode: mode})
+  }
+
+  private chooseDevices = (show: boolean) => {
+    console.log('chooseDevices', show)
+    this.setState({showHaircheck: show})
   }
 }
 

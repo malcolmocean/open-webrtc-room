@@ -21,10 +21,10 @@ const Container = styled.div({
 });
 
 const BlankVideo = styled.div({
-  width: '100%',
-  height: '100%',
-  backgroundColor: '#262a2c',
-  color: '#e9ecec',
+  width: '180px',
+  height: '135px',
+  // backgroundColor: '#262a2c',
+  // color: '#e9ecec',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -33,9 +33,9 @@ const BlankVideo = styled.div({
   }
 });
 
-const NoVideo = () => (
+const LoadingVideo = () => (
   <BlankVideo>
-    <p>No video selected</p>
+    <span className='ffmo'>Loading video</span>
   </BlankVideo>
 );
 
@@ -46,9 +46,8 @@ interface MediaPreviewProps {
 // MediaPreview displays a camera feed if video is provided, and a VolumeMeter
 // if audio is provided.
 const MediaPreview: React.SFC<MediaPreviewProps> = ({ video }) => (
-  <Container>
-    {/* TODO: Display something that communicates media.noInput media.hasEverHadInput */}
-    {video && video.loaded ? <Video media={video} /> : <NoVideo />}
+  <Container className='tintbg'>
+    {video && video.loaded ? <Video media={video} /> : <LoadingVideo />}
   </Container>
 );
 

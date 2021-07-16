@@ -17,6 +17,7 @@ import SettingsIcon from 'material-icons-svg/components/baseline/Settings';
 import React, { Component, useContext } from 'react';
 import { connect } from 'react-redux';
 import { AudioModes } from '../contexts/AudioModes';
+import ChooseDevices from '../contexts/ChooseDevices';
 import styled, { css } from 'styled-components';
 import { deviceSupportsVolumeMonitoring } from '../utils/isMobile';
 
@@ -43,6 +44,8 @@ interface SelfGridItemOverlayProps {
   allowShareScreen: boolean;
   removeAllAudio?: () => void;
   removeAllVideo?: () => void;
+  removeLocalMedia?: (id: string) => void;
+  stopSharingLocalMedia?: (id: string) => void;
   myCamera?: Media,
   myScreen?: Media,
 }
@@ -50,10 +53,13 @@ const SelfGridItemOverlay: React.SFC<SelfGridItemOverlayProps> = ({
   allowShareScreen,
   removeAllAudio,
   removeAllVideo,
+  removeLocalMedia,
+  stopSharingLocalMedia,
   myCamera,
   myScreen,
 }) => {
   const { audioMode, audioModeType } = useContext(AudioModes);
+  const { chooseDevices } = useContext(ChooseDevices);
   return (
     <Overlay>
       <UserControls
@@ -156,17 +162,18 @@ const SelfGridItemOverlay: React.SFC<SelfGridItemOverlayProps> = ({
                 )}
               />
             }
-            {/*!chooseDevices || HIDE_SETTINGS_FOR_NOW ? null :
-              <SettingsButton onClick={() => {
-                // if (removeAllAudio) removeAllAudio();
-                // if (removeAllVideo) removeAllVideo();
-                // chooseDevices();
-              }}>
-                <SettingsIcon />
-                <span>Settings</span>
-              </SettingsButton>
-            }
-            {/* settings button */}
+            <SettingsButton onClick={() => {
+              if (myCamera) {
+                if (removeLocalMedia) removeLocalMedia(myCamera.id);
+                if (stopSharingLocalMedia) stopSharingLocalMedia(myCamera.id);
+              }
+              if (removeAllAudio) removeAllAudio();
+              // if (removeAllVideo) removeAllVideo(); // removes screenshare
+              chooseDevices(true);
+            }}>
+              <SettingsIcon />
+              <span>Settings</span>
+            </SettingsButton>
           </div>
         )}
       />
@@ -183,20 +190,17 @@ interface SelfGridItemProps {
   allowWalkieTalkieMode: boolean;
   removeAllAudio?: () => void;
   removeAllVideo?: () => void;
-  // chooseDevices: () => void;
+  removeLocalMedia?: (id: string) => void;
+  stopSharingLocalMedia?: (id: string) => void;
 }
 
-interface State {
-  inHaircheckMode: boolean;
-}
+interface State {}
 
 // const SelfGridItem: React.SFC<Props, State> = ({
 class SelfGridItem extends Component<SelfGridItemProps, State> {
   constructor(props: SelfGridItemProps) {
     super(props)
-    this.state = {
-      inHaircheckMode: false
-    }
+    this.state = {}
   }
   public render() {
     const {
@@ -208,7 +212,8 @@ class SelfGridItem extends Component<SelfGridItemProps, State> {
       allowWalkieTalkieMode,
       removeAllAudio,
       removeAllVideo,
-      // chooseDevices,
+      removeLocalMedia,
+      stopSharingLocalMedia,
     } = this.props;
       return (
       <UserBox>
@@ -223,6 +228,8 @@ class SelfGridItem extends Component<SelfGridItemProps, State> {
                 allowShareScreen={allowShareScreen}
                 removeAllAudio={removeAllAudio!}
                 removeAllVideo={removeAllVideo!}
+                removeLocalMedia={removeLocalMedia!}
+                stopSharingLocalMedia={stopSharingLocalMedia!}
                 myCamera={webcamStreams[0]}
                 myScreen={screenStreams[0]}
               />
@@ -242,7 +249,9 @@ function mapDispatchToProps(
   return {
     ...props,
     removeAllAudio: () => dispatch(Actions.removeAllMedia('audio')),
-    removeAllVideo: () => dispatch(Actions.removeAllMedia('video'))
+    removeAllVideo: () => dispatch(Actions.removeAllMedia('video')),
+    removeLocalMedia: (id: string) => dispatch(Actions.removeMedia(id)),
+    stopSharingLocalMedia: (id: string) => dispatch(Actions.stopSharingLocalMedia(id)),
   };
 }
 

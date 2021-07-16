@@ -31,6 +31,8 @@ import Tooltip from './Tooltip';
 const hasTestOutput = false // getConfigFromMetaTag('sound-test-output');
 
 const Container = styled.div({
+  backgroundColor: '#6663',
+  paddingBottom: '10px',
   display: 'grid',
   gridTemplateAreas: `
     'header'
@@ -145,6 +147,8 @@ type GetMedia = (
 
 export interface HaircheckProps {
   onAccept: () => void;
+  audioModeType?: 'always' | 'sometimes' | 'never';
+  audioMode?: 'on' | 'off';
 }
 export interface HaircheckState {
   allowInitialAutoCapture: boolean;
@@ -202,7 +206,8 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
       <LocalMediaList
         screen={false}
         render={({ media, removeMedia, shareLocalMedia }) => {
-          const { audioMode, audioModeType } = useContext(AudioModes);
+          const audioMode = this.props.audioMode
+          const audioModeType = this.props.audioModeType
           const previewVideo = media.filter(m => m.id === this.state.previewVideoId)[0];
           const previewAudio = media.filter(m => m.id === this.state.previewAudioId)[0];
 
