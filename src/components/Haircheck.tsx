@@ -249,6 +249,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                           requestingCapture,
                           audioModeType
                         )}
+                        {audioModeType == 'never' ? null :
                         <div>
                           <UserControls
                             render={({ user, setAudioOutputDevice }) => (
@@ -295,6 +296,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                             )}
                           />
                         </div>
+                        }
                         <div>
                           <label>
                             <span className="reactroom-left-icon">
@@ -322,7 +324,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
                             )}
                           </label>
                         </div>
-                        {audioModeType == 'never' ? null :                           
+                        {audioModeType == 'never' ? null :
                         <div>
                           <label>
                             <span className="reactroom-left-icon">
