@@ -20,6 +20,8 @@ You can retrieve your API key by visiting [https://accounts.simplewebrtc.com](ht
 
 Rather than properly fork the base library, given how we're using this, at present we're just making a couple small changes after running `npm install`.
 
+#### **Change #1:**
+
 **in `adjustVideoCaptureResolution`**
 
 Move the code from `const newConstraints = {};` to this loop `for (const video of localMedia) {` *into* the loop, then replace
@@ -46,6 +48,20 @@ Some other interesting possibilities
 newConstraints.height = { min: width * 0.5, max: width * 1.5 };
 newConstraints.height = { min: height * 0.5, max: height * 1.5 };
 newConstraints.height = { ideal: Math.floor(width/(1920/1080)) };
+```
+
+#### **Change #2**
+
+In order for low-res to work well on Large Group plans without getting scaled down dramatically further, these lines must be commented out in module.js:
+
+```javascript
+// sendEncodings: !screenCapture
+//     ? [
+//         { rid: 'low', active: true, scaleResolutionDownBy: 4 },
+//         { rid: 'medium', active: true, scaleResolutionDownBy: 2 },
+//         { rid: 'high', active: true }
+//     ]
+//     : undefined,
 ```
 
 ## Deploying to Static/Shared Hosting
