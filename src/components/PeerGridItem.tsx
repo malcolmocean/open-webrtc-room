@@ -59,7 +59,7 @@ const PeerGridItemOverlay: React.SFC<PeerGridItemOverlayProps> = ({
   peer,
   toggleFullScreen,
 }) => {
-  const { audioMode, audioModeType } = useContext(AudioModes);
+  const { currentAudioState, audioModeType } = useContext(AudioModes);
   const { hiddenPeers, togglePeer } = useContext(HiddenPeers);
   const isHidden = hiddenPeers.includes(peer.id)
   return (

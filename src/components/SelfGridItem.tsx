@@ -58,7 +58,7 @@ const SelfGridItemOverlay: React.SFC<SelfGridItemOverlayProps> = ({
   myCamera,
   myScreen,
 }) => {
-  const { audioMode, audioModeType } = useContext(AudioModes);
+  const { currentAudioState, audioModeType } = useContext(AudioModes);
   const { chooseDevices } = useContext(ChooseDevices);
   return (
     <Overlay>

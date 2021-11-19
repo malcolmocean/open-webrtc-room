@@ -148,7 +148,7 @@ type GetMedia = (
 export interface HaircheckProps {
   onAccept: () => void;
   audioModeType?: 'always' | 'sometimes' | 'never';
-  audioMode?: 'on' | 'off';
+  currentAudioState?: 'on' | 'off';
 }
 export interface HaircheckState {
   allowInitialAutoCapture: boolean;
@@ -206,7 +206,7 @@ class Haircheck extends React.Component<HaircheckProps, HaircheckState> {
       <LocalMediaList
         screen={false}
         render={({ media, removeMedia, shareLocalMedia }) => {
-          const audioMode = this.props.audioMode
+          const currentAudioState = this.props.currentAudioState
           const audioModeType = this.props.audioModeType
           const previewVideo = media.filter(m => m.id === this.state.previewVideoId)[0];
           const previewAudio = media.filter(m => m.id === this.state.previewAudioId)[0];

@@ -80,7 +80,7 @@ const LocalMediaControls: React.SFC<LocalMediaControlsProps> = ({
   removeAllVideo,
   isInline=false,
 }) => {
-  const { audioMode, audioModeType } = useContext(AudioModes)
+  const { currentAudioState, audioModeType } = useContext(AudioModes)
   const { chooseDevices } = useContext(ChooseDevices)
   return (hasVideo && hasScreenCapture ? null : <Container isInline={isInline} className={`tintbg ${isInline ? 'reactroom-media-send-btns-inline' : 'reactroom-media-send-btns'}`}>
     {audioModeType == 'never' ? null : <RequestUserMedia

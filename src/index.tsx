@@ -53,7 +53,8 @@ interface RunConfig {
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
   audioModeType: 'always' | 'sometimes' | 'never';
-  audioOffMessage: string,
+  currentAudioState: 'on' | 'off';
+  audioOffMessage: string;
 }
 
 const run = ({
@@ -70,6 +71,7 @@ const run = ({
   allowShareScreen = true,
   allowWalkieTalkieMode = true,
   audioModeType = 'never',
+  currentAudioState = 'off',
   audioOffMessage = 'Audio is turned off sometimes in this room',
 }: RunConfig) => {
   userName && setUserName(userName)
@@ -85,6 +87,7 @@ const run = ({
           allowShareScreen,
           allowWalkieTalkieMode,
           audioModeType,
+          currentAudioState,
           audioOffMessage,
         }}
       />

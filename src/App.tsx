@@ -34,6 +34,7 @@ interface RoomConfig {
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
   audioModeType: 'always' | 'sometimes' | 'never';
+  currentAudioState: 'on' | 'off';
   audioOffMessage: string;
 }
 

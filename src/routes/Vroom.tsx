@@ -70,6 +70,7 @@ interface RoomConfig {
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
   audioModeType: 'always' | 'sometimes' | 'never';
+  currentAudioState: 'on' | 'off';
   audioOffMessage: string;
 }
 
@@ -91,7 +92,7 @@ interface State {
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
   audioModeType: 'always' | 'sometimes' | 'never';
-  audioMode: 'on' | 'off';
+  currentAudioState: 'on' | 'off';
   audioOffMessage: string;
   showHaircheck: boolean;
 }
@@ -113,7 +114,7 @@ class Index extends Component<Props, State> {
       hiddenPeers: [],
       audioModeType,
       audioOffMessage,
-      audioMode: 'off',
+      currentAudioState: 'off',
       showHaircheck: false,
       openToPublic,
       allowShareScreen,
@@ -127,12 +128,12 @@ class Index extends Component<Props, State> {
         <AudioModes.Provider
           value={{
             audioModeType: this.state.audioModeType,
-            audioMode: this.state.audioMode,
+            currentAudioState: this.state.currentAudioState,
             audioOffMessage: this.state.audioOffMessage,
             setAudioMode: this.setAudioMode
           }}
         >
-          {this.state.audioMode == 'off' ? null :
+          {this.state.currentAudioState == 'off' ? null :
             <RemoteAudioPlayer />
           }
           <HiddenPeers.Provider
@@ -152,7 +153,7 @@ class Index extends Component<Props, State> {
                   {({ room }) => (<>
                     {this.state.showHaircheck ? <Haircheck
                       audioModeType={this.state.audioModeType}
-                      audioMode={this.state.audioMode}
+                      currentAudioState={this.state.currentAudioState}
                       onAccept={() => {
                         this.setState({ showHaircheck: false });
                       }}
@@ -170,10 +171,11 @@ class Index extends Component<Props, State> {
                             // TODO = use this to style differently depending on what's visible
                             return <>
                               {allMedia.length ? <>
-                                {this.state.audioModeType == 'never' ? null :
-                                  (this.state.audioMode == 'off' ? <AudioOffBanner>
+                                {this.state.audioModeType == 'sometimes' ?
+                                  (this.state.currentAudioState == 'off' && this.state.audioOffMessage ? <AudioOffBanner>
                                     {this.state.audioOffMessage}
                                   </AudioOffBanner> : null)
+                                  : null
                                 // removed from here so it could be part of PeerRow flow
                                 // <Sidebar
                                 //   roomAddress={room.address!}
@@ -313,7 +315,7 @@ class Index extends Component<Props, State> {
   };
 
   private setAudioMode = (mode: 'on' | 'off') => {
-    this.setState({audioMode: mode})
+    this.setState({currentAudioState: mode})
   }
 
   private chooseDevices = (show: boolean) => {

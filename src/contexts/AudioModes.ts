@@ -5,14 +5,14 @@ import React from 'react';
 
 interface Context {
   audioModeType: 'always' | 'sometimes' | 'never';
-  audioMode: 'on' | 'off';
+  currentAudioState: 'on' | 'off';
   audioOffMessage: string;
   setAudioMode: (mode: 'on' | 'off') => void;
 }
 
 const AudioModes = React.createContext<Context>({
   audioModeType: 'never',
-  audioMode: 'off',
+  currentAudioState: 'off',
   audioOffMessage: 'Audio is turned off sometimes in this room',
   setAudioMode: (mode: 'on' | 'off') => null
 });
