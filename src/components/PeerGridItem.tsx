@@ -1,4 +1,4 @@
-import { Media, Peer, PeerControls, Video } from '@andyet/simplewebrtc';
+import { Media, Peer, PeerControls, Video, VolumeMeter } from '@andyet/simplewebrtc';
 import FullScreenIcon from 'material-icons-svg/components/baseline/Fullscreen';
 import ExitFullScreenIcon from 'material-icons-svg/components/baseline/FullscreenExit';
 import ReportIcon from 'material-icons-svg/components/baseline/Report';
@@ -12,6 +12,14 @@ import HiddenPeers from '../contexts/HiddenPeers';
 import { TalkyButton } from '../styles/button';
 import AudioOnlyPeer from './AudioOnlyPeer';
 import FullScreen from './Fullscreen';
+import { default as Meter } from './VolumeMeter';
+
+const Volume = styled.div({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignContent: 'middle'
+});
 
 const MuteButton = styled(TalkyButton)({
   display: 'inline-block',
@@ -112,39 +120,60 @@ const LoadingVideo: React.SFC<{
 // otherwise it renders an audio-only display.
 const PeerGridItemMedia: React.SFC<PeerGridItemMediaProps> = ({ media, fullScreenActive }) => {
   const videoStreams = media.filter(m => m.kind === 'video' && !m.remoteDisabled);
+  const audioStreams = media.filter(m => m.kind === 'audio' && !m.remoteDisabled);
+
+  const volumeMeter = !audioStreams.length ? null : <VolumeMeter
+    media={audioStreams[0]}
+    noInputTimeout={7000}
+    render={({ noInput, volume, speaking }) => (
+      <Volume>
+        <Meter
+          buckets={16}
+          volume={-volume}
+          speaking={speaking}
+          loaded={!!audioStreams[0].loaded}
+          noInput={noInput}
+          requesting={false}
+        />
+      </Volume>
+    )}
+  />
 
   if (videoStreams.length > 0) {
     const webcamStreams = videoStreams.filter(s => !s.screenCapture);
     const screenCaptureStreams = videoStreams.filter(s => s.screenCapture);
 
     if (videoStreams.length === 1) {
-      return (
+      return (<>
+        {volumeMeter}
         <LoadingVideo
           media={videoStreams[0]}
           qualityProfile={fullScreenActive ? 'high' : 'medium'}
         />
-      );
+      </>);
     }
     if (screenCaptureStreams.length === 0) {
-      return (
+      return (<>
+        {volumeMeter}
         <LoadingVideo
           media={webcamStreams[0]}
           qualityProfile={fullScreenActive ? 'high' : 'medium'}
         />
-      );
+      </>);
     }
 
-    return (
+    return (<>
+      {volumeMeter}
       <PictureInPictureContainer>
         {/* Screenshare */}
         <LoadingVideo media={screenCaptureStreams[0]} />
         {/* Camera */}
         <Video media={webcamStreams[0]} qualityProfile="low" />
       </PictureInPictureContainer>
-    );
+    </>);
   }
 
-  return <AudioOnlyPeer />;
+  return volumeMeter // <AudioOnlyPeer />;
 };
 
 const Overlay = styled.div({
