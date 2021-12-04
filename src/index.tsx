@@ -53,7 +53,7 @@ interface RunConfig {
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
   audioModeType: 'always' | 'sometimes' | 'never';
-  currentAudioState: 'on' | 'off';
+  // currentAudioState: 'on' | 'off';
   audioOffMessage: string;
 }
 
@@ -71,11 +71,10 @@ const run = ({
   allowShareScreen = true,
   allowWalkieTalkieMode = true,
   audioModeType = 'never',
-  currentAudioState = 'off',
   audioOffMessage = 'Audio is turned off sometimes in this room',
 }: RunConfig) => {
   userName && setUserName(userName)
-  console.log('run: audioModeType=' + audioModeType + ', currentAudioState=' + currentAudioState)
+  console.log('run: audioModeType=' + audioModeType)
   setLowRes()
   ReactDOM.render(
     <Provider store={store}>
@@ -88,7 +87,6 @@ const run = ({
           allowShareScreen,
           allowWalkieTalkieMode,
           audioModeType,
-          currentAudioState,
           audioOffMessage,
         }}
       />

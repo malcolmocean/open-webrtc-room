@@ -73,7 +73,6 @@ interface RoomConfig {
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
   audioModeType: 'always' | 'sometimes' | 'never';
-  currentAudioState: 'on' | 'off';
   audioOffMessage: string;
 }
 
@@ -109,7 +108,6 @@ class Index extends Component<Props, State> {
       allowWalkieTalkieMode,
       audioModeType,
       audioOffMessage,
-      currentAudioState,
     } = props.roomConfig;
     this.state = {
       activeSpeakerView: false,
