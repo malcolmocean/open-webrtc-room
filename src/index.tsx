@@ -75,6 +75,7 @@ const run = ({
   audioOffMessage = 'Audio is turned off sometimes in this room',
 }: RunConfig) => {
   userName && setUserName(userName)
+  console.log('run: audioModeType=' + audioModeType + ', currentAudioState=' + currentAudioState)
   setLowRes()
   ReactDOM.render(
     <Provider store={store}>
@@ -128,7 +129,6 @@ function setHighRes() {
   ] as VideoResolutionTier[]
   dispatchAny(Actions.setVideoResolutionTiers(tiers))
 }
-
 
 export default {
   run,

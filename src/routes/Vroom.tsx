@@ -106,6 +106,7 @@ class Index extends Component<Props, State> {
       allowWalkieTalkieMode,
       audioModeType,
       audioOffMessage,
+      currentAudioState,
     } = props.roomConfig;
     this.state = {
       activeSpeakerView: false,
@@ -114,7 +115,7 @@ class Index extends Component<Props, State> {
       hiddenPeers: [],
       audioModeType,
       audioOffMessage,
-      currentAudioState: 'off',
+      currentAudioState,
       showHaircheck: false,
       openToPublic,
       allowShareScreen,
@@ -315,6 +316,7 @@ class Index extends Component<Props, State> {
   };
 
   private setAudioMode = (mode: 'on' | 'off') => {
+    console.log('setAudioMode', mode)
     this.setState({currentAudioState: mode})
   }
 
