@@ -236,6 +236,12 @@ const GridItemMedia: React.SFC<GridItemMediaProps> = ({ media, name, peerId, ful
   const audioStreams = media.filter(m => m.kind === 'audio' && !m.remoteDisabled);
 
   const { hiddenPeers } = useContext(HiddenPeers);
+  if (hiddenPeers.includes(peerId)) {
+    return <>
+      <VideoPlaceholder type='camera' hidden={!!webcamStreams.length} name={name} />
+      <VideoPlaceholder type='screen' hidden={!!screenStreams.length} />
+    </>
+  }
 
   // TODO: add an audio placeholder for good grid flow
   // but it'll need to be invisible in never-audio rooms
@@ -244,9 +250,9 @@ const GridItemMedia: React.SFC<GridItemMediaProps> = ({ media, name, peerId, ful
       media={audioStreams[0]}
       noInputTimeout={7000}
       render={({ noInput, volume, speaking }) => {
-        // console.log('noInput', noInput)
-        // console.log('volume', volume)
-        // console.log('speaking', speaking)
+        console.log('noInput', noInput)
+        console.log('volume', volume)
+        console.log('speaking', speaking)
         return (
         <Volume>
           <MyVolumeMeter
@@ -262,16 +268,7 @@ const GridItemMedia: React.SFC<GridItemMediaProps> = ({ media, name, peerId, ful
     />
     <DividerLine />
   </>
-
-  if (hiddenPeers.includes(peerId)) {
-    return (
-      <>
-        <VideoPlaceholder type='camera' hidden={!!webcamStreams.length} name={name} />
-        {audio}
-        <VideoPlaceholder type='screen' hidden={!!screenStreams.length} />
-      </>
-    );
-  }
+  // this is just a display; the audio is actually *played* from <RemoteAudioPlayer /> in Vroom
 
   const webcam = webcamStreams.length ?
     <Video media={webcamStreams[0]} qualityProfile='low' />

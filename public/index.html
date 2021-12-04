@@ -14,6 +14,7 @@
   <body class='darktheme'>
     <div id="webrtcvideos_root"></div>
     <script type="text/javascript">
+      let audioState = 'off'
       SimpleWebRTC.run({
         roomName: 'demo',
         userName: ['Bob', 'Jane', 'Hussain', 'Anju', 'Sean'][Math.floor(5*Math.random())],
@@ -23,23 +24,34 @@
         openToPublic: true,
         allowShareScreen: true,
         allowWalkieTalkieMode: false,
-        audioModeType: 'always',
-        currentAudioState: 'on',
-        audioOffMessage: '',
-        // audioOffMessage: "Audio? No way. Okay maybe sometimes."
+        audioModeType: 'sometimes',
+        currentAudioState: audioState,
+        // audioOffMessage: '',
+        audioOffMessage: "Audio? No way. Okay maybe sometimes."
       });
-      function toggleDarktheme() {
+      function toggleDarktheme () {
         if (/darktheme/.test(document.body.className)) {
           document.body.className = document.body.className.replace(/ *darktheme */, '')
         } else {
           document.body.className = document.body.className += ' darktheme'
         }
       }
+      function toggleAudio () {
+        audioState = (audioState == 'on') ? 'off' : 'on'
+        SimpleWebRTC.setCurrentAudioState(audioState)
+        const btn = document.getElementById('toggle-audio-button')
+        btn.className = (audioState == 'on') ? 'btn btn-danger' : 'btn btn-success'
+        btn.innerText = (audioState == 'on') ? 'turn audio off' : 'turn audio on'
+      }
     </script>
 
     <div style='display: inline-block; position: absolute; right: 10px; bottom: 10px;'>
       <button class='btn btn-ghost btn-black' onclick='toggleDarktheme()'>dark</button>
     </div>
+<!-- 
+    <div style='display: inline-block; position: absolute; left: 10px; bottom: 10px;'>
+      <button id="toggle-audio-button" class='btn btn-success' onclick='toggleAudio()'>turn audio on</button>
+    </div> -->
     
     <link href='https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,900' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>

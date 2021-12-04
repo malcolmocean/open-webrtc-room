@@ -26,6 +26,9 @@ import { AudioModes } from '../contexts/AudioModes';
 import ChooseDevices from '../contexts/ChooseDevices';
 import mq from '../styles/media-queries';
 
+import MicOffIcon from 'material-icons-svg/components/baseline/MicOff';
+
+
 const RootContainer = styled.div({
   display: 'flex',
   flexDirection: 'column',
@@ -115,7 +118,7 @@ class Index extends Component<Props, State> {
       hiddenPeers: [],
       audioModeType,
       audioOffMessage,
-      currentAudioState,
+      currentAudioState: audioModeType == 'always' ? 'on' : 'off',
       showHaircheck: false,
       openToPublic,
       allowShareScreen,
@@ -125,6 +128,8 @@ class Index extends Component<Props, State> {
 
   public render() {
     return (
+      <>
+      {/*<>this.state.currentAudioState = {this.state.currentAudioState}</>*/}
       <Provider configUrl={this.props.configUrl} userData={this.props.userData}>
         <AudioModes.Provider
           value={{
@@ -170,11 +175,14 @@ class Index extends Component<Props, State> {
                             const allCameras = allMedia.filter(m => !m.screenCapture)
                             const allScreens = allMedia.filter(m => m.screenCapture)
                             // TODO = use this to style differently depending on what's visible
+                            // eg remove the screenshare row entirely if no screens shared
                             return <>
                               {allMedia.length ? <>
+                                <>{'' && this.state.currentAudioState}</>
                                 {this.state.audioModeType == 'sometimes' ?
                                   (this.state.currentAudioState == 'off' && this.state.audioOffMessage ? <AudioOffBanner>
-                                    {this.state.audioOffMessage}
+                                    <MicOffIcon />
+                                    {' ' + this.state.audioOffMessage}
                                   </AudioOffBanner> : null)
                                   : null
                                 // removed from here so it could be part of PeerRow flow
@@ -265,6 +273,7 @@ class Index extends Component<Props, State> {
           </HiddenPeers.Provider>
         </AudioModes.Provider>
       </Provider>
+      </>
     );
   }
 

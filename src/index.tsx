@@ -108,6 +108,10 @@ const loadTemplate = (id: string): DocumentFragment | null => {
 
 const dispatchAny = store.dispatch as any
 
+function setCurrentAudioState(state: string) {
+  alert('setCurrentAudioState: ' + state)
+}
+
 function setUserName(name: string) {
   dispatchAny(Actions.setDisplayName(name))
 }
@@ -136,4 +140,5 @@ export default {
   setUserName,
   setHighRes,
   setLowRes,
+  setCurrentAudioState,
 };
