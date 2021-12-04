@@ -122,6 +122,7 @@ class Index extends Component<Props, State> {
       allowShareScreen,
       allowWalkieTalkieMode,
     };
+    (window as any).__talky__setCurrentAudioState = this.setAudioState
   }
 
   public render() {
@@ -134,7 +135,7 @@ class Index extends Component<Props, State> {
             audioModeType: this.state.audioModeType,
             currentAudioState: this.state.currentAudioState,
             audioOffMessage: this.state.audioOffMessage,
-            setAudioMode: this.setAudioMode
+            setAudioState: this.setAudioState
           }}
         >
           {this.state.currentAudioState == 'off' ? null :
@@ -322,8 +323,8 @@ class Index extends Component<Props, State> {
     }
   };
 
-  private setAudioMode = (mode: 'on' | 'off') => {
-    console.log('setAudioMode', mode)
+  private setAudioState = (mode: 'on' | 'off') => {
+    console.log('setAudioState', mode)
     this.setState({currentAudioState: mode})
   }
 

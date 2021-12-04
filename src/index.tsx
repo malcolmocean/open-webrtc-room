@@ -53,7 +53,6 @@ interface RunConfig {
   allowShareScreen: boolean;
   allowWalkieTalkieMode: boolean;
   audioModeType: 'always' | 'sometimes' | 'never';
-  // currentAudioState: 'on' | 'off';
   audioOffMessage: string;
 }
 
@@ -107,7 +106,8 @@ const loadTemplate = (id: string): DocumentFragment | null => {
 const dispatchAny = store.dispatch as any
 
 function setCurrentAudioState(state: string) {
-  alert('setCurrentAudioState: ' + state)
+  (window as any).__talky__setCurrentAudioState(state)
+  // alert('setCurrentAudioState: ' + state)
 }
 
 function setUserName(name: string) {
