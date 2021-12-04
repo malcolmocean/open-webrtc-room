@@ -211,6 +211,21 @@ interface GridItemMediaProps {
   fullScreenActive?: boolean;
 }
 
+// doesn't seem to work yet
+// const AudioPlaceholder = styled.div({
+//   height: '6px',
+//   marginTop: 'none',
+//   marginBottom: 'none',
+// })
+
+const DividerLine = styled.div({
+  height: '1px',
+  border: 'none',
+  marginTop: 'none',
+  marginBottom: 'none',
+  background: '#cbc',
+})
+
 // changed screenCapture quality profile from undefined to 'low'
 // doesn't seem to work via localhost but MIGHT remotely (based on reading docs)
 // there's a pretty strong bias to hi-res screenshare though
@@ -218,99 +233,63 @@ const GridItemMedia: React.SFC<GridItemMediaProps> = ({ media, name, peerId, ful
   const videoStreams = media.filter(m => m.kind === 'video' && !m.remoteDisabled);
   const webcamStreams = videoStreams.filter(s => !s.screenCapture);
   const screenStreams = videoStreams.filter(s => s.screenCapture);
+  const audioStreams = media.filter(m => m.kind === 'audio' && !m.remoteDisabled);
 
   const { hiddenPeers } = useContext(HiddenPeers);
+
+  // TODO: add an audio placeholder for good grid flow
+  // but it'll need to be invisible in never-audio rooms
+  const audio = !audioStreams.length ? <></> : <>
+    <VolumeMeter
+      media={audioStreams[0]}
+      noInputTimeout={7000}
+      render={({ noInput, volume, speaking }) => {
+        // console.log('noInput', noInput)
+        // console.log('volume', volume)
+        // console.log('speaking', speaking)
+        return (
+        <Volume>
+          <MyVolumeMeter
+            buckets={10}
+            volume={-volume}
+            speaking={speaking}
+            loaded={!!audioStreams[0].loaded}
+            noInput={noInput}
+            requesting={false}
+          />
+        </Volume>
+      )}}
+    />
+    <DividerLine />
+  </>
 
   if (hiddenPeers.includes(peerId)) {
     return (
       <>
         <VideoPlaceholder type='camera' hidden={!!webcamStreams.length} name={name} />
+        {audio}
         <VideoPlaceholder type='screen' hidden={!!screenStreams.length} />
       </>
     );
   }
 
-  if (videoStreams.length > 0) {
-    if (webcamStreams.length && !screenStreams.length) {
-      return (
-        <>
-          <Video media={webcamStreams[0]} />
-          <VideoPlaceholder type='screen' />
-        </>
-      );
-    }
+  const webcam = webcamStreams.length ?
+    <Video media={webcamStreams[0]} qualityProfile='low' />
+    :
+    <VideoPlaceholder type='camera' name={name} />
 
-    if (screenStreams.length && !webcamStreams.length) {
-      return (
-        <>
-          <VideoPlaceholder type='camera' name={name} />
-          {/*<VideoWrapper type='screen' media={screenStreams[0]} />*/}
-          {/*<Video media={screenStreams[0]} qualityProfile='low' />*/}
-          <ScreenWrapperSimple>
-          <Video media={screenStreams[0]} qualityProfile='low' />
-          </ScreenWrapperSimple>
-        </>
-      );
-    }
+  const screen = screenStreams.length ?
+    <ScreenWrapperSimple>
+      <Video media={screenStreams[0]} qualityProfile='low' />
+    </ScreenWrapperSimple>
+    :
+    <VideoPlaceholder type='screen' />
 
-    return (
-      <>
-        {/*<VideoWrapper type='camera' media={webcamStreams[0]} />*/}
-        <Video media={webcamStreams[0]} qualityProfile='low' />
-        {/*<VideoWrapper type='screen' media={screenStreams[0]} />*/}
-        <ScreenWrapperSimple>
-        <Video media={screenStreams[0]} qualityProfile='low' />
-        </ScreenWrapperSimple>
-      </>
-    );
-  }
-
-  const DividerLine = styled.div({
-    height: '1px',
-    border: 'none',
-    marginTop: 'none',
-    marginBottom: 'none',
-    background: '#cbc',
-  })
-  const audioStreams = media.filter(m => m.kind === 'audio' && !m.remoteDisabled);
-  if (audioStreams.length) {
-    console.log('audioStreams[0]', audioStreams[0])
-    return (
-      <>
-        <VideoPlaceholder type='camera' name={name} />
-        <VolumeMeter
-          media={audioStreams[0]}
-          noInputTimeout={7000}
-          render={({ noInput, volume, speaking }) => {
-            console.log('volume', volume)
-            console.log('speaking', speaking)
-            return (
-            <Volume>
-              <MyVolumeMeter
-                buckets={10}
-                volume={-volume}
-                speaking={speaking}
-                loaded={!!audioStreams[0].loaded}
-                noInput={noInput}
-                requesting={false}
-              />
-            </Volume>
-          )}}
-        />
-        <DividerLine />
-        <VideoPlaceholder type='screen' />
-      </>
-    )
-  }
-  if (peerId == 'self') {
-    return (
-      <>
-        <VideoPlaceholder type='camera' name={name} />
-        <VideoPlaceholder type='screen' />
-      </>
-    );
-  }
-  return <></>
+  return <>
+    {webcam}
+    {audio}
+    {screen}
+  </>
 };
 
 
