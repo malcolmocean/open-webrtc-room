@@ -236,17 +236,17 @@ class Index extends Component<Props, State> {
                                   </LoadingState>
                                 ) : room.banned ? (
                                   <LoadingState>
-                                    <span className='reactroom-state reactroom-state-notavailable'>This room is not available.</span>
+                                    <span className='reactroom-state reactroom-state-notavailable'>Media not available.</span>
                                   </LoadingState>
                                 ) : (
                                   <LoadingState>
-                                    <span className='reactroom-state reactroom-state-joining'>Joining room...</span>
+                                    <span className='reactroom-state reactroom-state-joining'>Joining media...</span>
                                   </LoadingState>
                                 )}
                               </Connected>
                               <Connecting>
                                 <LoadingState>
-                                  <span className='reactroom-state reactroom-state-connecting'>Connecting...</span>
+                                  <span className='reactroom-state reactroom-state-connecting'>Connecting media...</span>
                                 </LoadingState>
                               </Connecting>
                               <Disconnected>
@@ -256,7 +256,7 @@ class Index extends Component<Props, State> {
                               </Disconnected>
                               <Failed>
                                 <LoadingState>
-                                  <span className='reactroom-state reactroom-state-failed'>Connection failed.</span>
+                                  <span className='reactroom-state reactroom-state-failed'>Connection to media server failed.</span>
                                 </LoadingState>
                               </Failed>
                             </>
